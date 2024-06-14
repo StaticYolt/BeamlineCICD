@@ -5,6 +5,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  push:
+      branches: [ "main" ]
+
 jobs:
   run-tests:
     strategy:
@@ -23,4 +26,4 @@ jobs:
         env:
           GIT_OWNER_REPO: ${{ matrix.repositories }}
         run: | 
-          echo "fragment=${GIT_OWNER_REPO##*/}" >> $GIT_OWNER_REPO        
+          echo "::set-output name=fragment::${GIT_OWNER_REPO##*/}        
