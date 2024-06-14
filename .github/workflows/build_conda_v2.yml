@@ -1,4 +1,4 @@
-name: Build Conda Environment
+name: Build Conda Environment v2
 
 # Controls when the workflow will run
 on:
@@ -19,6 +19,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Print out name and repo
+      - name: Print out owner and repo
         run: |
-          echo "${{ matrix.repositories }}"
+          IN= "${{ matrix.repositories }}"
+          link_info=$(echo $IN | tr "/" "\n")
+          OWNER= "${link_info[0]}""
+          REPO= "${link_info[1]}""
+          echo "$OWNER"
+          echo "$REPO"
