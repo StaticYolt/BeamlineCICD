@@ -28,9 +28,6 @@ jobs:
           echo ${{matrix.repos.org}}
           echo ${{matrix.repos.repo}}
       - name: Cloning remote repos
-        uses: GuillaumeFalourd/clone-github-repo-action@main
-        with:
-          owner: ${{matrix.repos.org}}
-          repository: ${{matrix.repos.repo}}
+        run: git clone --branch ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}"
       - name: Validate
         run: echo "WORKS"
