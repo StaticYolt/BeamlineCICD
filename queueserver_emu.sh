@@ -207,7 +207,7 @@ if $INSTALL_REDIS; then
   sudo apt-get update
   sudo apt-get install -y redis
 fi
-
+CONDA_PREFIX_COPY="$CONDA_PREFIX"
 if $INSTALL_KAFKA; then
   # based on https://www.conduktor.io/kafka/how-to-start-kafka-using-docker/
   sed 's/^  //' <<EOF > zk-single-kafka-single.yml
@@ -267,8 +267,6 @@ if ! systemctl is-active --quiet redis-server.service; then
   sudo systemctl start redis-server.service
 fi
 systemctl status redis-server.service --lines 0 --no-pager
-
-CONDA_PREFIX_COPY="$CONDA_PREFIX"
 
 ##[section]Starting: * setup conda env
 if $INSTALL_CONDA; then
