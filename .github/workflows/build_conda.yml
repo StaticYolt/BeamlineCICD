@@ -23,7 +23,4 @@ jobs:
       - name: Build Conda Env
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
-          
-          bash -uem ./queueserver_emu.sh --install-{conda,mongo,redis} --default-config
+        run: bash -uem ./queueserver_emu.sh --install-{conda,mongo,redis} --default-config
