@@ -272,6 +272,7 @@ systemctl status redis-server.service --lines 0 --no-pager
 if $INSTALL_CONDA; then
   echo "Installing conda"
   wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  echo $"CONDA_PREFIX"
   bash ./miniconda.sh -b -p $CONDA_PREFIX
 fi
 source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
