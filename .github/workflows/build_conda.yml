@@ -18,5 +18,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Give permissions
+        run: chmod -x queueserver_emu.sh
       - name: Build Conda Env
         run: ./queueserver_emu.sh --install-{conda,mongo,redis} --default-config
