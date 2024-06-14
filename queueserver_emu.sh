@@ -257,10 +257,10 @@ fi
 ##[section]Starting: * start mongodb service
 if ! systemctl is-active --quiet mongod; then
   echo "SUDO: Starting mongo daemon"
-  sudo systemctl enable mongod.service
-  sudo systemctl mongod start
+#  sudo systemctl enable mongod.service
+  sudo systemctl mongodb start
 fi
-systemctl status mongod.service --lines 0 --no-pager
+systemctl status mongodb.service --lines 0 --no-pager
 
 ##[section]Starting: * start redis service
 if ! systemctl is-active --quiet redis-server.service; then
