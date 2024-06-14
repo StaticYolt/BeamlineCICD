@@ -276,6 +276,7 @@ if $INSTALL_CONDA; then
   wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   export CONDA_PREFIX="$CONDA_PREFIX_COPY"
   echo "$CONDA_PREFIX"
+  echo "$CONDA_PREFIX_COPY"
   bash ./miniconda.sh -b -p $CONDA_PREFIX
 fi
 source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
