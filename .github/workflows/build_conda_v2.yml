@@ -20,8 +20,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Print out owner and repo
+        env:
+          GIT_OWNER_REPO: ${{ matrix.repositories }}
         run: |
-          IN= "${{ matrix.repositories }}"
+          IN= "$GIT_OWNER_REPO"
           link_info=$(echo $IN | tr "/" "\n")
           OWNER= "${link_info[0]}""
           REPO= "${link_info[1]}""
