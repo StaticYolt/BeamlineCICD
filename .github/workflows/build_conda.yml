@@ -19,4 +19,4 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build Conda Env
-        run: ./queueserver_emu.sh --install-{conda,mongo,redis) --default-config
+        run: ./queueserver_emu.sh --install-{conda,mongo,redis} --default-config
