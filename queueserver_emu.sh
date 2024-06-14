@@ -257,8 +257,8 @@ fi
 ##[section]Starting: * start mongodb service
 if ! systemctl is-active --quiet mongod; then
   echo "SUDO: Starting mongo daemon"
-  sudo systemctl unmask mongod
-  sudo systemctl start mongod
+  sudo systemctl enable mongod.service
+  sudo systemctl mongod start
 fi
 systemctl status mongod.service --lines 0 --no-pager
 
