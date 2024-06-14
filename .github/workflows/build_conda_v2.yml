@@ -37,6 +37,8 @@ jobs:
         run: |
           echo "ROOT"
           ls -la
+          ls
           echo "CLONED REPO"
-          cd poc-github-actions
+          cd ${{matrix.repos.repo}}
           ls -la
+          ls
