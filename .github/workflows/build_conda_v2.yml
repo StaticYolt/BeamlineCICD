@@ -15,7 +15,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
         repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master"}, {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master"}]
-
+        zenoto: [{env: "2023-3.3-py310-tiled", id: "10148425", checksum: "0a47934380db013b36f3e089afdff6aa"}]
     name: Run all repos
     runs-on: ${{ matrix.os }}
 
@@ -42,3 +42,21 @@ jobs:
           cd ${{matrix.repos.repo}}
           ls -la
           ls
+      
+      - name: Build Conda Env
+        env:
+          CONDA_PREFIX: "$HOME/miniconda"
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run: |
+          echo "Installing conda"
+          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          bash ./miniconda.sh -b -p $CONDA_PREFIX
+          echo "Downloading conda env..." &&
+          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+          echo "Extracting conda env..."
+          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          set +u # conda has unbound variables!
+          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          conda unpack && echo "Unpacked successfully!"
+          set -u
