@@ -189,7 +189,12 @@ if ! "$SKIP_PROFILE"; then
     # rm -fv ~/.ipython/profile_${TEST_PROFILE}/startup/*.py
   )
 fi
+
 CONDA_PREFIX_COPY="$CONDA_PREFIX"
+echo "$CONDA_PREFIX_COPY"
+echo "$CONDA_PREFIX_COPY"
+echo "$CONDA_PREFIX_COPY"
+echo "$CONDA_PREFIX_COPY"
 ##[section]Starting: * install required packages
 echo "Installing requirements..."
 if $INSTALL_MONGO; then
