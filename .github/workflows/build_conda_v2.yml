@@ -30,7 +30,6 @@ jobs:
       - name: Cloning remote repos
         uses: GuillaumeFalourd/clone-github-repo-action@main
         with:
-          branch: ${{matrix.repos.branch}}
           owner: ${{matrix.repos.org}}
           repository: ${{matrix.repos.repo}}
       - name: Validate
