@@ -22,10 +22,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-#      - name: Print out owner and repo
-#        run: |
-#          echo "Organization: ${{matrix.repos.org}}"
-#          echo "Repository: ${{matrix.repos.repo}}"
+      - name: Print out owner and repo
+        run: |
+          echo ${{matrix.repos.branch}}
+          echo ${{matrix.repos.org}}
+          echo ${{matrix.repos.repo}}
       - name: Cloning remote repos
         uses: GuillaumeFalourd/clone-github-repo-action@v2.3
         with:
