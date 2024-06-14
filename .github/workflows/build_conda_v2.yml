@@ -23,4 +23,4 @@ jobs:
         env:
           GIT_OWNER_REPO= "${{ matrix.repositories }}"
         run: | 
-          echo "::set-output name=fragment::${GIT_OWNER_REPO##*/}        
+          echo "fragment=${GIT_OWNER_REPO##*/}" >> $GIT_OWNER_REPO        
