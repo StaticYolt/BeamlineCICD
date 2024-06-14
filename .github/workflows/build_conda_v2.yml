@@ -22,9 +22,9 @@ jobs:
       - name: Print out owner and repo
         env:
           GIT_OWNER_REPO: ${{ matrix.repositories }}
+          LINK_INFO: $(echo "$GIT_OWNER_REPO" | tr "/" "\n")
+          OWNER: ${link_info[0]}
+          REPO: ${link_info[1]}
         run: |
-          link_info=$(echo "$GIT_OWNER_REPO" | tr "/" "\n")
-          OWNER= "${link_info[0]}""
-          REPO= "${link_info[1]}""
           echo "$OWNER"
           echo "$REPO"
