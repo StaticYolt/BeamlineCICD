@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        repos: [{org: "NSLS-II-CSX", repo: "profile_collection"}, {org: "NSLS-II-SRX", repo: "profile_collection"}]
+        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "main"}, {org: "NSLS-II-SRX", repo: "profile_collection", branch: "main"}]
 
     name: Run all repos
     runs-on: ${{ matrix.os }}
@@ -22,7 +22,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Print out owner and repo
-        run: |
-          echo "Organization: ${{matrix.repos.org}}"
-          echo "Repository: ${{matrix.repos.repo}}"
+#      - name: Print out owner and repo
+#        run: |
+#          echo "Organization: ${{matrix.repos.org}}"
+#          echo "Repository: ${{matrix.repos.repo}}"
+      - name: Cloning remote repos
+        uses: GuillaumeFalourd/clone-github-repo-action@v2.3
+        with:
+          branch: ${{matrix.repos.branch}}
+          owner: ${{matrix.repos.org}}
+          repository: ${{matrix.repos.repo}}
+      - name: Validate
+        run: echo "WORKS"
