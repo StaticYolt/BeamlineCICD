@@ -174,6 +174,8 @@ fi
 if ! "$SKIP_PROFILE"; then
   echo "Preparing test profile"
   rm -rfv profile_collection
+  echo "adding key "
+  ssh-add - <<< "$SSH_PRIVATE_KEY"
   git clone "$PROFILE_REPO" profile_collection
   (
     cd profile_collection
