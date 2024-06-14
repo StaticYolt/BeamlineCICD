@@ -59,6 +59,10 @@ while (($#)); do
   --install-conda)
     INSTALL_CONDA=true
     CONDA_PREFIX=$(pick "$val" "$arg2") || shift
+    echo "$CONDA_PREFIX"
+    echo "$CONDA_PREFIX"
+    echo "$CONDA_PREFIX"
+    echo "$CONDA_PREFIX"
     ;;
   --install-mongo)
     INSTALL_MONGO=true
