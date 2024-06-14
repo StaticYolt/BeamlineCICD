@@ -189,7 +189,7 @@ if ! "$SKIP_PROFILE"; then
     # rm -fv ~/.ipython/profile_${TEST_PROFILE}/startup/*.py
   )
 fi
-
+CONDA_PREFIX_COPY="$CONDA_PREFIX"
 ##[section]Starting: * install required packages
 echo "Installing requirements..."
 if $INSTALL_MONGO; then
@@ -207,7 +207,7 @@ if $INSTALL_REDIS; then
   sudo apt-get update
   sudo apt-get install -y redis
 fi
-CONDA_PREFIX_COPY="$CONDA_PREFIX"
+
 if $INSTALL_KAFKA; then
   # based on https://www.conduktor.io/kafka/how-to-start-kafka-using-docker/
   sed 's/^  //' <<EOF > zk-single-kafka-single.yml
