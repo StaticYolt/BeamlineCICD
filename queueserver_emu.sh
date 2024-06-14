@@ -175,6 +175,9 @@ if ! "$SKIP_PROFILE"; then
   echo "Preparing test profile"
   rm -rfv profile_collection
   echo "adding key "
+  # shellcheck disable=SC2046
+  # shellcheck disable=SC2006
+  eval `ssh-agent`
   ssh-add - <<< "$SSH_PRIVATE_KEY"
   git clone "$PROFILE_REPO" profile_collection
   (
