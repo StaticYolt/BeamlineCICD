@@ -21,6 +21,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Print out owner and repo
         env:
-          GIT_OWNER_REPO= "${{ matrix.repositories }}"
+          GIT_OWNER_REPO: ${{ matrix.repositories }}
         run: | 
           echo "fragment=${GIT_OWNER_REPO##*/}" >> $GIT_OWNER_REPO        
