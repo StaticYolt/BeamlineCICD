@@ -120,6 +120,12 @@ export PYTHON_VERSION=3.9
 export TEST_PROFILE="${TEST_PROFILE:-test}"
 export USE_EPICS_IOC=0
 
+CONDA_PREFIX_COPY="$CONDA_PREFIX"
+echo "$CONDA_PREFIX_COPY"
+echo "$CONDA_PREFIX_COPY"
+echo "$CONDA_PREFIX_COPY"
+echo "$CONDA_PREFIX_COPY"
+
 ##[section]Starting: * get configs (pyOlog, databroker, tiled, kafka)
 if $DEFAULT_CONFIG; then
   echo "pyOlog config:"
@@ -190,11 +196,6 @@ if ! "$SKIP_PROFILE"; then
   )
 fi
 
-CONDA_PREFIX_COPY="$CONDA_PREFIX"
-echo "$CONDA_PREFIX_COPY"
-echo "$CONDA_PREFIX_COPY"
-echo "$CONDA_PREFIX_COPY"
-echo "$CONDA_PREFIX_COPY"
 ##[section]Starting: * install required packages
 echo "Installing requirements..."
 if $INSTALL_MONGO; then
