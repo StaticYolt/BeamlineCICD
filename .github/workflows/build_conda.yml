@@ -1,0 +1,22 @@
+name: Build Conda Environment
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  run-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+
+    name: Conda Stuff
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build Conda Env
+        run: ./queueserver_emu.sh --install-{conda,mongo,redis) --default-config
