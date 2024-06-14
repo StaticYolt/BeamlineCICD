@@ -268,18 +268,19 @@ if ! systemctl is-active --quiet redis-server.service; then
 fi
 systemctl status redis-server.service --lines 0 --no-pager
 
+CONDA_PREFIX_COPY="$CONDA_PREFIX"
+
 ##[section]Starting: * setup conda env
 if $INSTALL_CONDA; then
   echo "Installing conda"
   wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+  export CONDA_PREFIX="$CONDA_PREFIX_COPY"
   echo "$CONDA_PREFIX"
   bash ./miniconda.sh -b -p $CONDA_PREFIX
 fi
 source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
 echo "Looking for conda env..."
 set +u # conda has unbound variables!
-
-CONDA_PREFIX_COPY="$CONDA_PREFIX"
 
 conda deactivate
 conda activate "${CONDA_ENV_NAME}" || {
