@@ -34,6 +34,21 @@ jobs:
           branch: ${{matrix.repos.branch}}
           owner: ${{matrix.repos.org}}
           repository: ${{matrix.repos.repo}}
+      - name: Setting up Blackhole IOC
+        env:
+          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
+        run: |
+          echo | sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
+          trap 'kill -SIGINT %1; echo exiting...' EXIT
+          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+      - name: Setting up Blackhole IOC
+        env:
+          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
+        run: |
+          echo | sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
+          trap 'kill -SIGINT %1; echo exiting...' EXIT
+          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+
 #      - name: Configuring defaults
 #        run: |
 #          echo "pyOlog config:"
@@ -164,15 +179,16 @@ jobs:
 #              exit 1
 #            )
 #          fi
-      - name: Setting up Blackhole IOC
-        env:
-          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
-        run: |
-          echo | sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
-          trap 'kill -SIGINT %1; echo exiting...' EXIT
-          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
-      - name: Confirm Completion
-        run: echo "DONE"
+#      - name: Setting up Blackhole IOC
+#        env:
+#          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
+#        run: |
+#          echo | sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
+#          trap 'kill -SIGINT %1; echo exiting...' EXIT
+#          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+#      - name: Confirm Completion
+#        run: echo "DONE"
+
 #          echo "Performing beamline-specific tasks..."
 #          case "${BEAMLINE_ACRONYM,,}" in
 #          csx)
