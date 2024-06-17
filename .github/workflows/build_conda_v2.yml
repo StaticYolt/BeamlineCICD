@@ -50,21 +50,24 @@ jobs:
         run: |
           echo "Installing conda"
           wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          ls
-          
-          echo "$CONDA_PREFIX"
           bash ./miniconda.sh -b -p $CONDA_PREFIX
           source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+          
           echo "Downloading conda env..." &&
-          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+#          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+          
           echo "Extracting conda env..."
-          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           set +u # conda has unbound variables!
-          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          conda unpack && echo "Unpacked successfully!"
+#          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#          conda unpack && echo "Unpacked successfully!"
           set -u
-
-#          echo "Installing conda"
-#          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-#          bash ./miniconda.sh -b -p $CONDA_PREFIX
+      - name: Installing Mongo
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lsb-release
+          wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+          echo "deb [ arch=$(dpkg --print-architecture) ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+          sudo apt-get install -y mongodb-org
+          echo "Completed mongo download"
