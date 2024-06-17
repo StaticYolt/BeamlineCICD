@@ -34,49 +34,66 @@ jobs:
           branch: ${{matrix.repos.branch}}
           owner: ${{matrix.repos.org}}
           repository: ${{matrix.repos.repo}}
-#      - name: Configuring defaults
-#        run: |
-#          echo "pyOlog config:"
-#          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
-#          cat $HOME/.pyOlog.conf
-#
-#          echo "Classic databroker v0/v1 config:"
-#          databroker_conf_dir="$HOME/.config/databroker"
-#          beamline_acronym="${BEAMLINE_ACRONYM,,}"
-#          databroker_bl_conf="${beamline_acronym}.yml"
-#          mkdir -v -p ${databroker_conf_dir}
-#          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
-#          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
-#          cat ${databroker_conf_dir}/_legacy_config.yml
-#          cat ${databroker_conf_dir}/${databroker_bl_conf}
-#
-#          echo "Tiled profile config:"
-#          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
-#          mkdir -v -p "${tiled_profiles_dir}"
-#          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
-#          ${beamline_acronym:-local}:
-#            direct:
-#              authentication:
-#                allow_anonymous_access: true
-#              trees:
-#              - tree: databroker.mongo_normalized:Tree.from_uri
-#                path: /
-#                args:
-#                  uri: mongodb://localhost:27017/metadatastore-local
-#                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
-      - name: Performing Beamline actions
-        env:
-          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
+      - name: Configuring defaults
         run: |
-          echo "Performing beamline-specific tasks..."
-          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
-          if [[ ! -d "$cfg_dir" ]]; then
-            sudo mkdir -v -p "$cfg_dir" ||
-            (
-              echo "Error: Couldn't create dir: $cfg_dir"
-              exit 1
-            )
-          fi
+          echo "pyOlog config:"
+          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
+          cat $HOME/.pyOlog.conf
+
+          echo "Classic databroker v0/v1 config:"
+          databroker_conf_dir="$HOME/.config/databroker"
+          beamline_acronym="${BEAMLINE_ACRONYM,,}"
+          databroker_bl_conf="${beamline_acronym}.yml"
+          mkdir -v -p ${databroker_conf_dir}
+          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
+          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
+          cat ${databroker_conf_dir}/_legacy_config.yml
+          cat ${databroker_conf_dir}/${databroker_bl_conf}
+
+          echo "Tiled profile config:"
+          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
+          mkdir -v -p "${tiled_profiles_dir}"
+          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
+          ${beamline_acronym:-local}:
+            direct:
+              authentication:
+                allow_anonymous_access: true
+              trees:
+              - tree: databroker.mongo_normalized:Tree.from_uri
+                path: /
+                args:
+                  uri: mongodb://localhost:27017/metadatastore-local
+                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
+          EOF
+            cat ${tiled_profiles_dir}/profiles.yml
+
+            echo "Kafka config:"
+            sed 's/^  //' << EOF > kafka.yml
+            ---
+              abort_run_on_kafka_exception: false
+              bootstrap_servers:
+                - localhost:9092
+              runengine_producer_config:
+                security.protocol: PLAINTEXT
+          EOF
+
+            echo "SUDO: Placing kafka config in /etc/bluesky"
+            sudo mkdir -v -p /etc/bluesky/
+            sudo mv -v kafka.yml /etc/bluesky/kafka.yml
+            cat /etc/bluesky/kafka.yml
+#      - name: Performing Beamline actions
+#        env:
+#          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
+#        run: |
+#          echo "Performing beamline-specific tasks..."
+#          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
+#          if [[ ! -d "$cfg_dir" ]]; then
+#            sudo mkdir -v -p "$cfg_dir" ||
+#            (
+#              echo "Error: Couldn't create dir: $cfg_dir"
+#              exit 1
+#            )
+#          fi
 
 #          echo "Performing beamline-specific tasks..."
 #          case "${BEAMLINE_ACRONYM,,}" in
