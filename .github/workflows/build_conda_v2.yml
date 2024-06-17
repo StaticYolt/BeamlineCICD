@@ -36,7 +36,7 @@ jobs:
           repository: ${{matrix.repos.repo}}
       - name: Configuring defaults
         run: |
-          cho "pyOlog config:"
+          echo "pyOlog config:"
           wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
           cat $HOME/.pyOlog.conf
 
