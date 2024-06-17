@@ -23,11 +23,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Print out owner and repo
-        run: |
-          echo ${{matrix.repos.branch}}
-          echo ${{matrix.repos.org}}
-          echo ${{matrix.repos.repo}}
       - name: Cloning remote repos
         uses: GuillaumeFalourd/clone-github-repo-action@main
         with:
@@ -179,6 +174,8 @@ jobs:
           sudo pip install supervisor 
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
+      - name: Start Re Manager
+        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
       - name: Confirm Completion
         run: echo "DONE"
 
