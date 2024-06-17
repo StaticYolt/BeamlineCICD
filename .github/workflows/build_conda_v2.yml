@@ -46,6 +46,7 @@ jobs:
           sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
       - name: Checking Blackhole IOC PV's
         run: |
+          sudo pip install supervisor 
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
 
