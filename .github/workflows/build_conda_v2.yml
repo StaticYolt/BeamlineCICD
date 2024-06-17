@@ -69,6 +69,14 @@ jobs:
           sudo apt-get clean
           sudo apt-get update
           sudo apt-get install -y redis
+          
+          if ! systemctl is-active --quiet redis-server.service; then
+            echo "SUDO: Starting redis server"
+            sudo systemctl start redis-server.service
+          fi
+          systemctl status redis-server.service --lines 0 --no-pager
+          
+          echo "DONE WITH REDIS"
 #      - name: Installing Mongo
 #        run: |
 #          sudo apt-get install gnupg curl
