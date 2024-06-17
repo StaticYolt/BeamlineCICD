@@ -77,7 +77,6 @@ jobs:
               exit 1
             )
           fi
-          ;;
 
 #          echo "Performing beamline-specific tasks..."
 #          case "${BEAMLINE_ACRONYM,,}" in
