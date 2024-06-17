@@ -14,7 +14,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver"}, {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master"}]
+        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver"},
+                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master"}]
         zenoto: [{env: "2023-3.3-py310-tiled", id: "10148425", checksum: "0a47934380db013b36f3e089afdff6aa"}]
     name: Run all repos
     runs-on: ${{ matrix.os }}
@@ -33,35 +34,34 @@ jobs:
           branch: ${{matrix.repos.branch}}
           owner: ${{matrix.repos.org}}
           repository: ${{matrix.repos.repo}}
-#      - name: Access cloned repository content
-#        run: |
-#          echo "ROOT"
-#          ls -la
-#          ls
-#          echo "CLONED REPO"
-#          cd ${{matrix.repos.repo}}
-#          ls -la
-#          ls
-      - name: Setup Ipython test profile
+      - name: Setting up Blackhole IOC
         env:
-          PROFILE_REPO: "git@github.com:${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
-          PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          TEST_PROFILE: "test"
+          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
         run: |
-          eval `ssh-agent`
-          ssh-add - <<< "$SSH_PRIVATE_KEY"
-          echo "Preparing test profile"
-          rm -rfv profile_collection
-            git clone "$PROFILE_REPO" profile_collection
-            (
-              cd profile_collection
-              git checkout "$PROFILE_BRANCH"
-              rm -rfv ~/.ipython/profile_${TEST_PROFILE}/
-              mkdir -pv ~/.ipython/profile_${TEST_PROFILE}/
-              cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
-            )
-          echo "COMPLETED STARTING UP"
+          echo | ${CAPROTO_COMMAND} &
+          trap 'kill -SIGINT %1; echo exiting...' EXIT
+          
+          ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+#      - name: Setup Ipython test profile
+#        env:
+#          PROFILE_REPO: "git@github.com:${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
+#          PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
+#          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#          TEST_PROFILE: "test"
+#        run: |
+#          eval `ssh-agent`
+#          ssh-add - <<< "$SSH_PRIVATE_KEY"
+#          echo "Preparing test profile"
+#          rm -rfv profile_collection
+#            git clone "$PROFILE_REPO" profile_collection
+#            (
+#              cd profile_collection
+#              git checkout "$PROFILE_BRANCH"
+#              rm -rfv ~/.ipython/profile_${TEST_PROFILE}/
+#              mkdir -pv ~/.ipython/profile_${TEST_PROFILE}/
+#              cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
+#            )
+#          echo "COMPLETED STARTING UP"
 #      - name: Build Conda Env
 #        env:
 #          CONDA_PREFIX: "home/runner/miniconda"
