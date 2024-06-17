@@ -45,7 +45,9 @@ jobs:
           trap 'kill -SIGINT %1; echo exiting...' EXIT
           sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
       - name: Checking Blackhole IOC PV's
-        run: supervisor/start_supervisor.sh status
+        run: |
+          chmod +x supervisor/start_supervisor.sh 
+          supervisor/start_supervisor.sh status
 
 #      - name: Configuring defaults
 #        run: |
