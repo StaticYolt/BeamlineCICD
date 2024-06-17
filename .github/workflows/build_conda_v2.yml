@@ -34,14 +34,45 @@ jobs:
           branch: ${{matrix.repos.branch}}
           owner: ${{matrix.repos.org}}
           repository: ${{matrix.repos.repo}}
-      - name: Setting up Blackhole IOC
-        env:
-          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
+      - name: Configuring defaults
         run: |
-          sudo ln -s /path/to/source /bin/caRepeater
-          sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
-          trap 'kill -SIGINT %1; echo exiting...' EXIT
-          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+          cho "pyOlog config:"
+          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
+          cat $HOME/.pyOlog.conf
+
+          echo "Classic databroker v0/v1 config:"
+          databroker_conf_dir="$HOME/.config/databroker"
+          beamline_acronym="${BEAMLINE_ACRONYM,,}"
+          databroker_bl_conf="${beamline_acronym}.yml"
+          mkdir -v -p ${databroker_conf_dir}
+          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
+          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
+          cat ${databroker_conf_dir}/_legacy_config.yml
+          cat ${databroker_conf_dir}/${databroker_bl_conf}
+
+          echo "Tiled profile config:"
+          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
+          mkdir -v -p "${tiled_profiles_dir}"
+          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
+          ${beamline_acronym:-local}:
+            direct:
+              authentication:
+                allow_anonymous_access: true
+              trees:
+              - tree: databroker.mongo_normalized:Tree.from_uri
+                path: /
+                args:
+                  uri: mongodb://localhost:27017/metadatastore-local
+                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
+#      - name: Setting up Blackhole IOC
+#        env:
+#          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
+#        run: |
+#          sudo ln -s /path/to/source /bin/caRepeater
+#          sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
+#          trap 'kill -SIGINT %1; echo exiting...' EXIT
+#          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+
 #      - name: Setup Ipython test profile
 #        env:
 #          PROFILE_REPO: "git@github.com:${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
