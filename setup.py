@@ -8,5 +8,5 @@ setup(
     license='',
     author='Onepiece4',
     author_email='',
-    description=''
+    description='blah blah commit'
 )
