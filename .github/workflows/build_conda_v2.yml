@@ -36,7 +36,7 @@ jobs:
           repository: ${{matrix.repos.repo}}
       - name: Setting up Blackhole IOC
         env:
-          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
+          CAPROTO_COMMAND: "sudo python -m caproto.ioc_examples.pathological.spoof_beamline"
         run: |
           echo | ${CAPROTO_COMMAND} &
           trap 'kill -SIGINT %1; echo exiting...' EXIT
