@@ -34,136 +34,6 @@ jobs:
           branch: ${{matrix.repos.branch}}
           owner: ${{matrix.repos.org}}
           repository: ${{matrix.repos.repo}}
-      - name: Configuring defaults
-        run: |
-          echo "pyOlog config:"
-          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
-          cat $HOME/.pyOlog.conf
-
-          echo "Classic databroker v0/v1 config:"
-          databroker_conf_dir="$HOME/.config/databroker"
-          beamline_acronym="${BEAMLINE_ACRONYM,,}"
-          databroker_bl_conf="${beamline_acronym}.yml"
-          mkdir -v -p ${databroker_conf_dir}
-          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
-          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
-          cat ${databroker_conf_dir}/_legacy_config.yml
-          cat ${databroker_conf_dir}/${databroker_bl_conf}
-
-          echo "Tiled profile config:"
-          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
-          mkdir -v -p "${tiled_profiles_dir}"
-          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
-          ${beamline_acronym:-local}:
-            direct:
-              authentication:
-                allow_anonymous_access: true
-              trees:
-              - tree: databroker.mongo_normalized:Tree.from_uri
-                path: /
-                args:
-                  uri: mongodb://localhost:27017/metadatastore-local
-                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
-          EOF
-            cat ${tiled_profiles_dir}/profiles.yml
-
-            echo "Kafka config:"
-            sed 's/^  //' << EOF > kafka.yml
-            ---
-              abort_run_on_kafka_exception: false
-              bootstrap_servers:
-                - localhost:9092
-              runengine_producer_config:
-                security.protocol: PLAINTEXT
-          EOF
-
-            echo "SUDO: Placing kafka config in /etc/bluesky"
-            sudo mkdir -v -p /etc/bluesky/
-            sudo mv -v kafka.yml /etc/bluesky/kafka.yml
-            cat /etc/bluesky/kafka.yml
-      - name: Setup Ipython test profile
-        env:
-          PROFILE_REPO: "git@github.com:${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
-          PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          TEST_PROFILE: "test"
-        run: |
-          eval `ssh-agent`
-          ssh-add - <<< "$SSH_PRIVATE_KEY"
-          echo "Preparing test profile"
-          rm -rfv profile_collection
-            git clone "$PROFILE_REPO" profile_collection
-            (
-              cd profile_collection
-              git checkout "$PROFILE_BRANCH"
-              rm -rfv ~/.ipython/profile_${TEST_PROFILE}/
-              mkdir -pv ~/.ipython/profile_${TEST_PROFILE}/
-              cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
-            )
-          echo "COMPLETED STARTING UP"
-      - name: Build Conda Env
-        env:
-          CONDA_PREFIX: "home/runner/miniconda"
-          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-        run: |
-          echo "Installing conda"
-          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          bash ./miniconda.sh -b -p $CONDA_PREFIX
-          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
-
-          echo "Downloading conda env..." &&
-          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
-
-          echo "Extracting conda env..."
-          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          set +u
-          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          conda unpack && echo "Unpacked successfully!"
-          set -u
-      - name: Activating Redis
-        run: |
-          echo "SUDO: Installing redis"
-          sudo apt-get clean
-          sudo apt-get update
-          sudo apt-get install -y redis
-
-          if ! systemctl is-active --quiet redis-server.service; then
-            echo "SUDO: Starting redis server"
-            sudo systemctl start redis-server.service
-          fi
-          systemctl status redis-server.service --lines 0 --no-pager
-
-          echo "DONE WITH REDIS"
-      - name: Activating Mongo
-        run: |
-          sudo apt-get install gnupg curl
-          curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | \
-             sudo gpg -o /usr/share/keyrings/mongodb-server-4.4.gpg \
-             --dearmor
-          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-4.4.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-          sudo apt-get update
-          sudo apt-get install -y mongodb-org
-
-          if ! systemctl is-active --quiet mongod; then
-            echo "SUDO: Starting mongo daemon"
-            sudo systemctl start mongod
-          fi
-          systemctl status mongod.service --lines 0 --no-pager
-          echo "DONE WITH MONGO"
-      - name: Performing Beamline actions
-        env:
-          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
-        run: |
-          echo "Performing beamline-specific tasks..."
-          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
-          if [[ ! -d "$cfg_dir" ]]; then
-            sudo mkdir -v -p "$cfg_dir" ||
-            (
-              echo "Error: Couldn't create dir: $cfg_dir"
-              exit 1
-            )
-          fi
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -174,8 +44,151 @@ jobs:
           echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
           trap 'kill -SIGINT %1; echo exiting...' EXIT
           sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
-      - name: Confirm Completion
-        run: echo "DONE"
+      - name: Checking Blackhole IOC PV's
+        run: supervisor/start_supervisor.sh status
+
+#      - name: Configuring defaults
+#        run: |
+#          echo "pyOlog config:"
+#          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
+#          cat $HOME/.pyOlog.conf
+#
+#          echo "Classic databroker v0/v1 config:"
+#          databroker_conf_dir="$HOME/.config/databroker"
+#          beamline_acronym="${BEAMLINE_ACRONYM,,}"
+#          databroker_bl_conf="${beamline_acronym}.yml"
+#          mkdir -v -p ${databroker_conf_dir}
+#          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
+#          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
+#          cat ${databroker_conf_dir}/_legacy_config.yml
+#          cat ${databroker_conf_dir}/${databroker_bl_conf}
+#
+#          echo "Tiled profile config:"
+#          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
+#          mkdir -v -p "${tiled_profiles_dir}"
+#          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
+#          ${beamline_acronym:-local}:
+#            direct:
+#              authentication:
+#                allow_anonymous_access: true
+#              trees:
+#              - tree: databroker.mongo_normalized:Tree.from_uri
+#                path: /
+#                args:
+#                  uri: mongodb://localhost:27017/metadatastore-local
+#                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
+#          EOF
+#            cat ${tiled_profiles_dir}/profiles.yml
+#
+#            echo "Kafka config:"
+#            sed 's/^  //' << EOF > kafka.yml
+#            ---
+#              abort_run_on_kafka_exception: false
+#              bootstrap_servers:
+#                - localhost:9092
+#              runengine_producer_config:
+#                security.protocol: PLAINTEXT
+#          EOF
+#
+#            echo "SUDO: Placing kafka config in /etc/bluesky"
+#            sudo mkdir -v -p /etc/bluesky/
+#            sudo mv -v kafka.yml /etc/bluesky/kafka.yml
+#            cat /etc/bluesky/kafka.yml
+#      - name: Setup Ipython test profile
+#        env:
+#          PROFILE_REPO: "git@github.com:${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
+#          PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
+#          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#          TEST_PROFILE: "test"
+#        run: |
+#          eval `ssh-agent`
+#          ssh-add - <<< "$SSH_PRIVATE_KEY"
+#          echo "Preparing test profile"
+#          rm -rfv profile_collection
+#            git clone "$PROFILE_REPO" profile_collection
+#            (
+#              cd profile_collection
+#              git checkout "$PROFILE_BRANCH"
+#              rm -rfv ~/.ipython/profile_${TEST_PROFILE}/
+#              mkdir -pv ~/.ipython/profile_${TEST_PROFILE}/
+#              cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
+#            )
+#          echo "COMPLETED STARTING UP"
+#      - name: Build Conda Env
+#        env:
+#          CONDA_PREFIX: "home/runner/miniconda"
+#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+#        run: |
+#          echo "Installing conda"
+#          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+#          bash ./miniconda.sh -b -p $CONDA_PREFIX
+#          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+#
+#          echo "Downloading conda env..." &&
+#          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+#
+#          echo "Extracting conda env..."
+#          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#          set +u
+#          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#          conda unpack && echo "Unpacked successfully!"
+#          set -u
+#      - name: Activating Redis
+#        run: |
+#          echo "SUDO: Installing redis"
+#          sudo apt-get clean
+#          sudo apt-get update
+#          sudo apt-get install -y redis
+#
+#          if ! systemctl is-active --quiet redis-server.service; then
+#            echo "SUDO: Starting redis server"
+#            sudo systemctl start redis-server.service
+#          fi
+#          systemctl status redis-server.service --lines 0 --no-pager
+#
+#          echo "DONE WITH REDIS"
+#      - name: Activating Mongo
+#        run: |
+#          sudo apt-get install gnupg curl
+#          curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | \
+#             sudo gpg -o /usr/share/keyrings/mongodb-server-4.4.gpg \
+#             --dearmor
+#          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-4.4.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+#          sudo apt-get update
+#          sudo apt-get install -y mongodb-org
+#
+#          if ! systemctl is-active --quiet mongod; then
+#            echo "SUDO: Starting mongo daemon"
+#            sudo systemctl start mongod
+#          fi
+#          systemctl status mongod.service --lines 0 --no-pager
+#          echo "DONE WITH MONGO"
+#      - name: Performing Beamline actions
+#        env:
+#          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
+#        run: |
+#          echo "Performing beamline-specific tasks..."
+#          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
+#          if [[ ! -d "$cfg_dir" ]]; then
+#            sudo mkdir -v -p "$cfg_dir" ||
+#            (
+#              echo "Error: Couldn't create dir: $cfg_dir"
+#              exit 1
+#            )
+#          fi
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.11
+#      - name: Setting up Blackhole IOC
+#        run: |
+#          python3 -m pip install -U caproto
+#          echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
+#          trap 'kill -SIGINT %1; echo exiting...' EXIT
+#          sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+#      - name: Confirm Completion
+#        run: echo "DONE"
 
 #          echo "Performing beamline-specific tasks..."
 #          case "${BEAMLINE_ACRONYM,,}" in
