@@ -43,27 +43,27 @@ jobs:
           ls -la
           ls
       
-#      - name: Build Conda Env
-#        env:
-#          CONDA_PREFIX: "home/runner/miniconda"
-#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-#        run: |
-#          echo "Installing conda"
-#          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-#          bash ./miniconda.sh -b -p $CONDA_PREFIX
-#          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
-#
-#          echo "Downloading conda env..." &&
-#          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
-#
-#          echo "Extracting conda env..."
-#          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-#          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-#          set +u
-#          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-#          conda unpack && echo "Unpacked successfully!"
-#          set -u
-      - name: Installing Redis
+      - name: Build Conda Env
+        env:
+          CONDA_PREFIX: "home/runner/miniconda"
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run: |
+          echo "Installing conda"
+          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          bash ./miniconda.sh -b -p $CONDA_PREFIX
+          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+
+          echo "Downloading conda env..." &&
+          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenoto.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+
+          echo "Extracting conda env..."
+          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          set +u
+          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          conda unpack && echo "Unpacked successfully!"
+          set -u
+      - name: Activating Redis
         run: |
           echo "SUDO: Installing redis"
           sudo apt-get clean
@@ -77,22 +77,22 @@ jobs:
           systemctl status redis-server.service --lines 0 --no-pager
           
           echo "DONE WITH REDIS"
-#      - name: Installing Mongo
-#        run: |
-#          sudo apt-get install gnupg curl
-#          curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | \
-#             sudo gpg -o /usr/share/keyrings/mongodb-server-4.4.gpg \
-#             --dearmor
-#          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-4.4.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
-#          sudo apt-get update
-#          sudo apt-get install -y mongodb-org
-#
-#          if ! systemctl is-active --quiet mongod; then
-#            echo "SUDO: Starting mongo daemon"
-#            sudo systemctl start mongod
-#          fi
-#          systemctl status mongod.service --lines 0 --no-pager
-#          echo "DONE WITH MONGO"
+      - name: Activating Mongo
+        run: |
+          sudo apt-get install gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-4.4.asc | \
+             sudo gpg -o /usr/share/keyrings/mongodb-server-4.4.gpg \
+             --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-4.4.gpg ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/4.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.4.list
+          sudo apt-get update
+          sudo apt-get install -y mongodb-org
+
+          if ! systemctl is-active --quiet mongod; then
+            echo "SUDO: Starting mongo daemon"
+            sudo systemctl start mongod
+          fi
+          systemctl status mongod.service --lines 0 --no-pager
+          echo "DONE WITH MONGO"
 
 #          sudo apt-get update
 #          sudo apt-get install -y lsb-release
