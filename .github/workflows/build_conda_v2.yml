@@ -39,9 +39,8 @@ jobs:
         with:
           python-version: 3.11
       - name: Setting up Blackhole IOC
-        env:
-          CAPROTO_COMMAND: "python -m caproto.ioc_examples.pathological.spoof_beamline"
         run: |
+          pip install caproto
           echo | sudo python -m caproto.ioc_examples.pathological.spoof_beamline &
           trap 'kill -SIGINT %1; echo exiting...' EXIT
           sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
