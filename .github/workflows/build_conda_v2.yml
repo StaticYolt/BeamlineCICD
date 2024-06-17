@@ -71,9 +71,9 @@ jobs:
           echo "Performing beamline-specific tasks..."
           cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
           if [[ ! -d "$cfg_dir" ]]; then
-            mkdir -v -p "$cfg_dir" ||
+            sudo mkdir -v -p "$cfg_dir" ||
             (
-              echo "Error: Couldn't create dir: ${$cfg_dir}"
+              echo "Error: Couldn't create dir: $cfg_dir"
               exit 1
             )
           fi
