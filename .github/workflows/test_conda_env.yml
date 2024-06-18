@@ -22,12 +22,22 @@ jobs:
           echo "Listing home directory contents:"
           ls -al ~
           
-          # Search for the miniconda.sh script in common directories
+          # Search for the miniconda.sh script in common directories with sudo and redirect output
           echo "Searching for miniconda.sh in the home directory:"
-          sudo find ~ -name "miniconda.sh" -print
+          sudo find ~ -name "miniconda.sh" -print > ~/find_results_home.txt
   
           echo "Searching for miniconda.sh in the /tmp directory:"
-          sudo find /tmp -name "miniconda.sh" -print
+          sudo find /tmp -name "miniconda.sh" -print > ~/find_results_tmp.txt
           
           echo "Searching for miniconda.sh in the /usr directory:"
-          sudo find /usr -name "miniconda.sh" -print
+          sudo find /usr -name "miniconda.sh" -print > ~/find_results_usr.txt
+  
+          # Display the contents of the find results
+          echo "Find results in home directory:"
+          cat ~/find_results_home.txt
+  
+          echo "Find results in /tmp directory:"
+          cat ~/find_results_tmp.txt
+          
+          echo "Find results in /usr directory:"
+          cat ~/find_results_usr.txt
