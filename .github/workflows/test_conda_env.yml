@@ -16,7 +16,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
       - name: displaying info
         run: |
-          ls -a
+          ls
           conda info
           conda info --envs
           pwd
