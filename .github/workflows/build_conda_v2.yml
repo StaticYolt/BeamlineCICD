@@ -179,6 +179,7 @@ jobs:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
           CONDA_PREFIX: "home/runner/miniconda"
         run: |
+          conda info --envs
           eval "$(conda shell.bash hook)"
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
       - name: Start Re Manager
