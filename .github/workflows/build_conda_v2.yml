@@ -177,9 +177,10 @@ jobs:
       - name: Activating the conda environment
         env:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+          CONDA_PREFIX: "home/runner/miniconda"
         run: |
           eval "$(conda shell.bash hook)"
-          conda activate "$CONDA_ENV_NAME"
+          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
       - name: Start Re Manager
         run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
       - name: Confirm Completion
