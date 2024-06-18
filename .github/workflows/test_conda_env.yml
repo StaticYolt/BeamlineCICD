@@ -1,0 +1,26 @@
+name: Test Conda Env
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+  push:
+      branches: [ "main" ]
+
+jobs:
+
+  zenodo_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloading miniconda3
+        uses: conda-incubator/setup-miniconda
+      - name: displaying info
+        run: |
+          ls -a
+          conda info
+          conda info --envs
+          pwd
+          if [ -e directory/miniconda.sh ]; then
+            echo "miniconda file exists"
+          fi
+
