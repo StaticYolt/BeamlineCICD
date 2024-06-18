@@ -20,6 +20,10 @@ jobs:
         run: |
           cd /
           ls
+          echo "IN HOME DIRECTORY"
+          cd home
+          ls
+          
           pwd
           if [ -e directory/miniconda.sh ]; then
             echo "miniconda file exists"
