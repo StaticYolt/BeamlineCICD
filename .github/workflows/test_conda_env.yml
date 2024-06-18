@@ -32,10 +32,8 @@ jobs:
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
           set -u
-          mkdir artifacts
-          pwd
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: 2023-3.3-py310-tiled
-          path: artifacts
+          path: home/runner/miniconda/envs/2023-3.3-py310-tiled
