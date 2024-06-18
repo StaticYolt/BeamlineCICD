@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Downloading miniconda3
-        uses: conda-incubator/setup-miniconda
+        uses: conda-incubator/setup-miniconda@v3
       - name: displaying info
         run: |
           ls -a
