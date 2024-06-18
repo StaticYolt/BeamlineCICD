@@ -16,16 +16,18 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
         with:
           auto-activate-base: False
-      - name: displaying info
+      - name: Find miniconda.sh
         run: |
-          cd /
-          ls
-          echo "IN runner DIRECTORY"
-          cd home/runner
-          ls
+          # List home directory to find the miniconda.sh script
+          echo "Listing home directory contents:"
+          ls -al ~
           
-          pwd
-          if [ -e directory/miniconda.sh ]; then
-            echo "miniconda file exists"
-          fi
-
+          # Search for the miniconda.sh script in common directories
+          echo "Searching for miniconda.sh in the home directory:"
+          find ~ -name "miniconda.sh" -print
+  
+          echo "Searching for miniconda.sh in the /tmp directory:"
+          find /tmp -name "miniconda.sh" -print
+          
+          echo "Searching for miniconda.sh in the /usr directory:"
+          find /usr -name "miniconda.sh" -print
