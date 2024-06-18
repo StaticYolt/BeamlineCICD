@@ -20,5 +20,9 @@ jobs:
         run: |
           cd ~
           ls
-          cd conda-pkgs-dir
+          echo "in cond_pkgs_dir"
+          cd conda_pkgs_dir
+          ls
+          cd ~/runners
+          echo "in runners dir"
           ls
