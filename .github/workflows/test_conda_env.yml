@@ -24,10 +24,10 @@ jobs:
           
           # Search for the miniconda.sh script in common directories
           echo "Searching for miniconda.sh in the home directory:"
-          find ~ -name "miniconda.sh" -print
+          sudo find ~ -name "miniconda.sh" -print
   
           echo "Searching for miniconda.sh in the /tmp directory:"
-          find /tmp -name "miniconda.sh" -print
+          sudo find /tmp -name "miniconda.sh" -print
           
           echo "Searching for miniconda.sh in the /usr directory:"
-          find /usr -name "miniconda.sh" -print
+          sudo find /usr -name "miniconda.sh" -print
