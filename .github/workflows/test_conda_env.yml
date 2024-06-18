@@ -19,5 +19,4 @@ jobs:
       - name: Find miniconda.sh
         run: |
           cd ~
-          cd home/runner/runners
           ls
