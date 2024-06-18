@@ -14,9 +14,10 @@ jobs:
     steps:
       - name: Downloading miniconda3
         uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto_activate_base: False
       - name: displaying info
         run: |
-          conda deactivate
           ls
           conda info
           conda info --envs
