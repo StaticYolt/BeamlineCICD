@@ -12,17 +12,23 @@ jobs:
   zenodo_artifact:
     runs-on: ubuntu-latest
     steps:
-      - name: Downloading miniconda3
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          auto-activate-base: False
-      - name: Find miniconda.sh
-        run: |
-          cd ~
-          ls
-          echo "in cond_pkgs_dir"
-          cd conda_pkgs_dir
-          ls
-          cd ~/runners
-          echo "in runners dir"
-          ls
+      - name: building conda
+        env:
+          CONDA_PREFIX: "home/runner/miniconda"
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run: | 
+          echo "Installing conda"
+          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          bash ./miniconda.sh -b -p $CONDA_PREFIX
+          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+
+          echo "Downloading conda env..." &&
+          wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+
+          echo "Extracting conda env..."
+          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          set +u
+          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          conda unpack && echo "Unpacked successfully!"
+          set -u
