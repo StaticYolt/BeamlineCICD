@@ -174,12 +174,12 @@ jobs:
           sudo pip install supervisor 
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
-#      - name: Activating the conda environment
-#        env:
-#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-#        run: |
-#          conda init bash
-#          conda activate "$CONDA_ENV_NAME"
+      - name: Activating the conda environment
+        env:
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda activate "$CONDA_ENV_NAME"
       - name: Start Re Manager
         run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
       - name: Confirm Completion
