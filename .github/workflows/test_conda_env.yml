@@ -16,6 +16,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
       - name: displaying info
         run: |
+          conda deactivate
           ls
           conda info
           conda info --envs
