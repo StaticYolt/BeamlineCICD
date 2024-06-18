@@ -15,11 +15,10 @@ jobs:
       - name: Downloading miniconda3
         uses: conda-incubator/setup-miniconda@v3
         with:
-          auto_activate_base: False
+          auto-activate-base: False
       - name: displaying info
         run: |
           ls
-          conda info
           conda info --envs
           pwd
           if [ -e directory/miniconda.sh ]; then
