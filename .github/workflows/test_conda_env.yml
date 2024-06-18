@@ -19,5 +19,5 @@ jobs:
       - name: Find miniconda.sh
         run: |
           cd ~
-          cd home/runner/miniconda
+          cd home/runner
           ls
