@@ -18,8 +18,8 @@ jobs:
           auto-activate-base: False
       - name: displaying info
         run: |
+          cd -
           ls
-          conda info --envs
           pwd
           if [ -e directory/miniconda.sh ]; then
             echo "miniconda file exists"
