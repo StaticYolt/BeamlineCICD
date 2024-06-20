@@ -22,7 +22,7 @@ jobs:
           pwd
           sudo chmod +x miniconda.sh
           pwd
-          bash ./miniconda.sh -b -p $CONDA_PREFIX
+          sudo bash ./miniconda.sh -b -p $CONDA_PREFIX
           pwd
 #          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
 #          pwd
