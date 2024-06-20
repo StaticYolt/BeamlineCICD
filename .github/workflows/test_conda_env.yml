@@ -35,8 +35,8 @@ jobs:
           set +u
           conda init bash
           echo "initialized conda"
-          conda unpack && echo "Unpacked successfully!"
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          conda unpack && echo "Unpacked successfully!"
           set -u
           pwd
 #      - name: Upload artifact
