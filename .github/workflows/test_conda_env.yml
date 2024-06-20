@@ -90,6 +90,23 @@ jobs:
             sudo mkdir -v -p /etc/bluesky/
             sudo mv -v kafka.yml /etc/bluesky/kafka.yml
             cat /etc/bluesky/kafka.yml
+      - name: Setup Ipython test profile
+        env:
+          PROFILE_REPO: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
+          PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
+          TEST_PROFILE: "test"
+        run: |
+          echo "Preparing test profile"
+          rm -rfv profile_collection
+            git clone "$PROFILE_REPO" profile_collection
+            (
+              cd profile_collection
+              git checkout "$PROFILE_BRANCH"
+              rm -rfv ~/.ipython/profile_${TEST_PROFILE}/
+              mkdir -pv ~/.ipython/profile_${TEST_PROFILE}/
+              cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
+            )
+          echo "COMPLETED STARTING UP"
 #      - name: Downloading Conda Artifact
 #        uses: actions/download-artifact@v4
 #        with:
