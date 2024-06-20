@@ -117,9 +117,9 @@ jobs:
           conda env list
       - name: Extracting conda env
         run: |
-          sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
-          echo "${{ env.CONDA_PREFIX }}"
-          sudo tar -xfv "2023-3.3-py310-tiled.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
+          sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+          echo "${{ env.CONDA_ENV_NAME }}"
+          sudo tar -xvf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs${{ env.CONDA_ENV_NAME }}"
           conda env list
 #      - name: starting conda
 #        run: |
