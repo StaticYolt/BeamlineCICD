@@ -20,7 +20,7 @@ jobs:
           pwd
           sudo wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
           pwd
-          chmod + miniconda.sh
+          chmod +x miniconda.sh
           pwd
           bash ./miniconda.sh -b -p $CONDA_PREFIX
           pwd
