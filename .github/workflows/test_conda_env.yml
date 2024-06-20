@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: building conda
         env:
-          CONDA_PREFIX: "home/runner/miniconda"
+          CONDA_PREFIX: ""
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: | 
           echo "Installing conda"
