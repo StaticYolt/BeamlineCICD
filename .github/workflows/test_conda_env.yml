@@ -42,13 +42,13 @@ jobs:
           name: "$CONDA_ENV_NAME"
           path: home/runner/miniconda/envs/2023-3.3-py310-tiled
   testing_conda_artifact:
-    runs-on:
-      strategy:
-        fail-fast: false
-        matrix:
-          os: [ ubuntu-latest ]
-          repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "CSX"},
-                  {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "CSX"},
+                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Downloading Conda Artifact
         uses: actions/download-artifact@v4
