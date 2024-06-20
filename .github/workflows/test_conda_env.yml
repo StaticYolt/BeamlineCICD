@@ -118,7 +118,7 @@ jobs:
       - name: Extracting conda env
         run: |
           sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
-          sudo tar -xf "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
+          sudo tar -xfv "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
           conda env list
 #      - name: starting conda
 #        run: |
