@@ -26,6 +26,9 @@ jobs:
           path: "2023-3.3-py310-tiled.tar.gz"
   testing_conda_artifact:
     needs: zenodo_artifact
+    env:
+      CONDA_ENV_NAME: 2023-3.3-py310-tiled
+      CONDA_PREFIX: miniconda
     strategy:
       fail-fast: false
       matrix:
@@ -42,6 +45,13 @@ jobs:
         run: |
           conda --version
           conda env list
+      - name: Extracting conda env
+        run: |
+          sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+          sudo tar -xf "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+          echo "DONE"
+          
+
 #      - name: Activating Conda
 #        env:
 #          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
