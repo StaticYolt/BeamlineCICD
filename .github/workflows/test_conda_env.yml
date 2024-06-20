@@ -8,24 +8,24 @@ on:
       branches: [ "main" ]
 
 jobs:
-#  zenodo_artifact:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Downloading Conda
-#        uses: conda-incubator/setup-miniconda@v3
-#      - name: Downloading Conda env
-#        env:
-#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-#        run: |
-#          echo "Downloading conda env..." &&
-#          wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
-#      - name: Upload artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: conda_artifact
-#          path: "2023-3.3-py310-tiled.tar.gz"
+  zenodo_artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Downloading Conda
+        uses: conda-incubator/setup-miniconda@v3
+      - name: Downloading Conda env
+        env:
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run: |
+          echo "Downloading conda env..." &&
+          wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: conda_artifact
+          path: "2023-3.3-py310-tiled.tar.gz"
   testing_conda_artifact:
-#    needs: zenodo_artifact
+    needs: zenodo_artifact
     env:
       CONDA_ENV_NAME: 2023-3.3-py310-tiled
       CONDA_PREFIX: miniconda
@@ -107,19 +107,19 @@ jobs:
               cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
             )
           echo "COMPLETED STARTING UP"
-#      - name: Downloading Conda Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: conda_artifact
-#      - name: Checking for conda
-#        run: |
-#          conda --version
-#          conda env list
-#      - name: Extracting conda env
-#        run: |
-#          sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
-#          sudo tar -xf "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
-#          echo "DONE"
+      - name: Downloading Conda Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: conda_artifact
+      - name: Checking for conda
+        run: |
+          conda --version
+          conda env list
+      - name: Extracting conda env
+        run: |
+          sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
+          sudo tar -xf "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
+          conda env list
 #      - name: starting conda
 #        run: |
 #          set +u
