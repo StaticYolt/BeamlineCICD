@@ -21,6 +21,10 @@ jobs:
           wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
           ls
           pwd
+          cd miniconda
+          ls
+          pwd
+          cd -
       - name: Upload artifact
         env:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
