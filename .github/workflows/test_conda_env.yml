@@ -11,17 +11,12 @@ jobs:
   zenodo_artifact:
     runs-on: ubuntu-latest
     steps:
-      - name: building conda
+      - name: Downloading Conda
+        uses: conda-incubator/setup-miniconda@v3
+      - name: Downloading Conda env
         env:
-          CONDA_PREFIX: "/miniconda"
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-        run: | 
-          echo "Installing conda"
-          sudo wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          sudo chmod +x miniconda.sh
-          sudo bash ./miniconda.sh -b -p $CONDA_PREFIX
-          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
-          
+        run: |
           echo "Downloading conda env..." &&
           wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
           ls
@@ -32,7 +27,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: "$CONDA_ENV_NAME"
-          path: /home/runner/work/BeamlineCICD/BeamlineCICD/miniconda"/$CONDA_ENV_NAME".tar.gz
+          path: miniconda"/$CONDA_ENV_NAME".tar.gz
 
 # /home/runner/work/BeamlineCICD/BeamlineCICD/miniconda
 #echo "Extracting conda env..."
