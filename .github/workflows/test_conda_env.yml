@@ -8,22 +8,22 @@ on:
       branches: [ "main" ]
 
 jobs:
-
   zenodo_artifact:
     runs-on: ubuntu-latest
+    env:
+      CONDA_ENV_NAME: "2023-3.3-py310-tiled"
     steps:
       - name: building conda
         env:
           CONDA_PREFIX: "home/runner/miniconda"
-          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: | 
           echo "Installing conda"
           cd ~
+          pwd
           sudo wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
           bash ./miniconda.sh -b -p $CONDA_PREFIX
           source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
-          ls -a
-          
+          pwd
           echo "Downloading conda env..." &&
           wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
 
@@ -34,8 +34,29 @@ jobs:
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
           set -u
+          pwd
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: 2023-3.3-py310-tiled
+          name: "$CONDA_ENV_NAME"
           path: home/runner/miniconda/envs/2023-3.3-py310-tiled
+  testing_conda_artifact:
+    env:
+      CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+    runs-on:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "CSX"},
+                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
+    steps:
+      - name: Downloading Conda Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 2023-3.3py310-tiled
+      - name: Checking for Conda Env
+        run: conda env list
+      - name: Activating Conda
+        run: |
+          conda activate "$CONDA_ENV_NAME"
+          conda env list
