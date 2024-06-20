@@ -31,7 +31,7 @@ jobs:
           sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           pwd
           ls
-          tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           set +u
           conda unpack && echo "Unpacked successfully!"
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
