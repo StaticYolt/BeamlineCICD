@@ -42,6 +42,7 @@ jobs:
           name: "$CONDA_ENV_NAME"
           path: home/runner/miniconda/envs/2023-3.3-py310-tiled
   testing_conda_artifact:
+    needs: zenodo_artifact
     strategy:
       fail-fast: false
       matrix:
