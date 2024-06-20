@@ -32,7 +32,7 @@ jobs:
           conda init bash
           
           echo "initialized conda"
-          conda init
+          conda init bash
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           sudo conda unpack && echo "Unpacked successfully!"
           set -u
