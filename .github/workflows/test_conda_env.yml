@@ -115,6 +115,9 @@ jobs:
         run: |
           conda --version
           conda env list
+          ls -a
+          cd ~
+          ls -a
       - name: Extracting conda env
         run: |
           sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
