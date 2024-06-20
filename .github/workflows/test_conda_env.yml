@@ -24,28 +24,27 @@ jobs:
           
           echo "Downloading conda env..." &&
           wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
-          
-          echo "Extracting conda env..."
-          sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          set +u
-          
-          echo "initialized conda"
-          conda init bash
-          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          sudo conda unpack && echo "Unpacked successfully!"
-          set -u
-          ls
-          conda init bash
-          conda deactivate
-          conda env list
-#      - name: Upload artifact
-#        env:
-#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: "$CONDA_ENV_NAME"
-#          path: home/runner/miniconda/envs/2023-3.3-py310-tiled
+
+      - name: Upload artifact
+        env:
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "$CONDA_ENV_NAME"
+          path: home/runner/miniconda/envs/"$CONDA_ENV_NAME"
+#echo "Extracting conda env..."
+#sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#set +u
+#
+#echo "initialized conda"
+#conda init bash
+#conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+#sudo conda unpack && echo "Unpacked successfully!"
+#set -u
+#ls
+#conda env list
+
 #  testing_conda_artifact:
 #    needs: zenodo_artifact
 #    strategy:
