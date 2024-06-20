@@ -28,13 +28,13 @@ jobs:
           wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
           
           echo "Extracting conda env..."
-          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           pwd
           ls
           tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           set +u
-          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
+          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           set -u
           pwd
 #      - name: Upload artifact
