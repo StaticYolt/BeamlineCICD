@@ -37,6 +37,10 @@ jobs:
                 {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
     runs-on: ${{ matrix.os }}
     steps:
+#      - name: Checkout Repo
+#        uses: actions/checkout@v4
+#      - name: Cloning Remote Repos
+#        run: git clone "
       - name: Downloading Conda Artifact
         uses: actions/download-artifact@v4
         with:
@@ -53,11 +57,14 @@ jobs:
       - name: starting conda
         run: |
           set +u
+          eval "$(conda shell.bash hook)"
+          ls "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
           conda activate "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
           sudo conda unpack && echo "Unpacked successfully!"
           set -u
           ls
           conda env list
+
 #conda init bash
 #eval "$(conda shell.bash hook)"
 #      - name: Activating Conda
