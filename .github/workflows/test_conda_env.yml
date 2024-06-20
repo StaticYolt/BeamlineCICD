@@ -26,7 +26,30 @@ jobs:
         with:
           name: "$CONDA_ENV_NAME"
           path: "2023-3.3-py310-tiled.tar.gz"
-
+  testing_conda_artifact:
+    needs: zenodo_artifact
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "CSX"},
+                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Downloading Conda Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: 2023-3.3py310-tiled.tar.gz
+      - name: Checking for conda
+        run: |
+          conda --version
+          conda env list
+#      - name: Activating Conda
+#        env:
+#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+#        run: |
+#          conda activate "$CONDA_ENV_NAME"
+#          conda env list
 # /home/runner/work/BeamlineCICD/BeamlineCICD/miniconda
 #echo "Extracting conda env..."
 #sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
@@ -41,25 +64,3 @@ jobs:
 #ls
 #conda env list
 
-#  testing_conda_artifact:
-#    needs: zenodo_artifact
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        os: [ ubuntu-latest ]
-#        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "CSX"},
-#                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
-#    runs-on: ${{ matrix.os }}
-#    steps:
-#      - name: Downloading Conda Artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: 2023-3.3py310-tiled
-#      - name: Checking for Conda Env
-#        run: conda env list
-#      - name: Activating Conda
-#        env:
-#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-#        run: |
-#          conda activate "$CONDA_ENV_NAME"
-#          conda env list
