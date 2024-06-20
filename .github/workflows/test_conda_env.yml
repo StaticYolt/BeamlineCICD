@@ -115,12 +115,11 @@ jobs:
         run: |
           conda --version
           conda env list
-          ls -a
-          cd ~
-          ls -a
       - name: Extracting conda env
         run: |
           sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
+          cd /home/runner/work/BeamlineCICD/BeamlineCICD
+          echo ls | grep "env.CONDA_ENV_NAME"
           sudo tar -xfv "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME}}"
           conda env list
 #      - name: starting conda
