@@ -19,7 +19,7 @@ jobs:
           echo "Installing conda"
           cd /home
           pwd
-#          sudo wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          sudo wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
 #          bash ./miniconda.sh -b -p $CONDA_PREFIX
 #          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
 #          pwd
