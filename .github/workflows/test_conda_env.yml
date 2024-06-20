@@ -17,11 +17,13 @@ jobs:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: | 
           echo "Installing conda"
-          cd /home
           pwd
           sudo wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          chmod +s miniconda.sh
+          pwd
+          chmod + miniconda.sh
+          pwd
           bash ./miniconda.sh -b -p $CONDA_PREFIX
+          pwd
 #          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
 #          pwd
 #          echo "Downloading conda env..." &&
