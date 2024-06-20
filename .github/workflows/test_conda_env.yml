@@ -57,15 +57,14 @@ jobs:
       - name: starting conda
         run: |
           set +u
-          conda init bash
-          source $HOME/.bashrc
-          conda activate "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+          eval "$(conda shell.bash hook)"
+          ls "${{ env.CONDA_PREFIX }}/env"
+          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
           sudo conda unpack && echo "Unpacked successfully!"
           set -u
           ls
           conda env list
-#          eval "$(conda shell.bash hook)"
-#          ls "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+
 #conda init bash
 #eval "$(conda shell.bash hook)"
 #      - name: Activating Conda
