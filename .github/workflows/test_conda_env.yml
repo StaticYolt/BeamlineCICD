@@ -50,7 +50,15 @@ jobs:
           sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
           sudo tar -xf "${{ env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
           echo "DONE"
-          
+      - name: starting conda
+        run: |
+          set +u
+          conda init bash
+          conda activate "${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+          conda unpack && echo "Unpacked successfully!"
+          set -u
+          ls
+          conda env list
 
 #      - name: Activating Conda
 #        env:
