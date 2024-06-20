@@ -36,9 +36,11 @@ jobs:
           conda init bash
           echo "initialized conda"
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          conda unpack && echo "Unpacked successfully!"
+          sudo conda unpack && echo "Unpacked successfully!"
           set -u
-          pwd
+          ls
+          conda deactivate
+          conda env list
 #      - name: Upload artifact
 #        env:
 #          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
