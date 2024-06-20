@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: "$CONDA_ENV_NAME"
-          path: home/runner/work/BeamlineCICD/BeamlineCICD/miniconda"/$CONDA_ENV_NAME".tar.gz
+          path: /home/runner/work/BeamlineCICD/BeamlineCICD/miniconda"/$CONDA_ENV_NAME".tar.gz
 
 # /home/runner/work/BeamlineCICD/BeamlineCICD/miniconda
 #echo "Extracting conda env..."
