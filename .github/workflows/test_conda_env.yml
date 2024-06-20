@@ -40,7 +40,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Cloning Remote Repos
-        run: git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}
+        run: git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}"
       - name: Remote repos comfirmation
         run: |
           pwd
