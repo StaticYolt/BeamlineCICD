@@ -42,7 +42,7 @@ jobs:
       - name: Cloning Remote Repos
         run: |
           mkdir "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
-          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${beamline_acronym}_${{matrix.repos.repo}}"
+          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
       - name: Remote repos comfirmation
         run: |
           ls "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
