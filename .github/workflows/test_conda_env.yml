@@ -41,13 +41,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Cloning Remote Repos
         run: |
-          mkdir "${beamline_acronym}_${{matrix.repos.repo}}"
+          mkdir "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
           git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${beamline_acronym}_${{matrix.repos.repo}}"
       - name: Remote repos comfirmation
         run: |
-          pwd
-          ls
-          echo | ls -a
+          ls "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
 #      - name: Downloading Conda Artifact
 #        uses: actions/download-artifact@v4
 #        with:
