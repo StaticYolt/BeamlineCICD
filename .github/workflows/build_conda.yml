@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Build Conda Env
         env:
-          CONDA_PREFIX: "/miniconda"
+          CONDA_PREFIX: "miniconda"
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: |
           echo "Installing conda"
@@ -39,13 +39,15 @@ jobs:
           conda env list
       - name: unpack activate conda
         env:
-          CONDA_PREFIX: "/miniconda"
+          CONDA_PREFIX: "miniconda"
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: |
           conda env list
           set +u
           eval "$(conda shell.bash hook)"
+          pwd
           conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          pwd
           conda unpack && echo "Unpacked successfully!"
           set -u
           conda env list
