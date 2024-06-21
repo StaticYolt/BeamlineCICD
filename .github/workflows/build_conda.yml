@@ -36,12 +36,15 @@ jobs:
           echo "Extracting conda env..."
           mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-      - name: unpack and activate conda
+         
+
+      - name: unpack activate conda
         env:
           CONDA_PREFIX: "home/runner/miniconda"
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: |
           set +u
+          eval "$(conda shell.bash hook)"
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
           set -u
