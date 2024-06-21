@@ -121,16 +121,16 @@ jobs:
           echo "${{ env.CONDA_ENV_NAME }}"
           sudo tar -xvf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
           conda env list
-#      - name: starting conda
-#        run: |
-#          set +u
-#          eval "$(conda shell.bash hook)"
-#          ls "${{ env.CONDA_PREFIX }}/env"
-#          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
-#          sudo conda unpack && echo "Unpacked successfully!"
-#          set -u
-#          ls
-#          conda env list
+      - name: starting conda
+        run: |
+          set +u
+          eval "$(conda shell.bash hook)"
+          ls "${{ env.CONDA_PREFIX }}/env"
+          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+          sudo conda unpack && echo "Unpacked successfully!"
+          set -u
+          ls
+          conda env list
 
 #conda init bash
 #eval "$(conda shell.bash hook)"
