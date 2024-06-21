@@ -3,6 +3,8 @@ name: Test Conda Env
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 
 
@@ -27,7 +29,7 @@ jobs:
     needs: zenodo_artifact
     env:
       CONDA_ENV_NAME: 2023-3.3-py310-tiled
-      CONDA_PREFIX: miniconda
+      CONDA_PREFIX: home/runner/miniconda
     strategy:
       fail-fast: false
       matrix:
@@ -110,22 +112,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: conda_artifact
-      - name: Extracting conda env
+      - name: Extracting, Activating and Unpacking Conda env
         run: |
-          sudo mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          echo "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          pwd
-          sudo tar -xvf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          conda env list
-      - name: starting conda
-        run: |
+          mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+          tar -xf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+          
           set +u
           eval "$(conda shell.bash hook)"
-          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/miniconda/envs/${CONDA_ENV_NAME}"
+          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
           sudo conda unpack && echo "Unpacked successfully!"
           set -u
-          ls
-          conda env list
+
 #      - name: Start MongoDB
 #        uses: supercharge/mongodb-github-action@1.11.0
 #        with:
