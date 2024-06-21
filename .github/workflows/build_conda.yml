@@ -46,7 +46,7 @@ jobs:
           set +u
           eval "$(conda shell.bash hook)"
           pwd
-          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/miniconda/envs/${CONDA_ENV_NAME}"
+          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda/envs/${CONDA_ENV_NAME}"
           pwd
           conda unpack && echo "Unpacked successfully!"
           set -u
