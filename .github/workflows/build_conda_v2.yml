@@ -116,20 +116,24 @@ jobs:
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
           set -u
-      - name: Activating Redis
-        run: |
-          echo "SUDO: Installing redis"
-          sudo apt-get clean
-          sudo apt-get update
-          sudo apt-get install -y redis
-
-          if ! systemctl is-active --quiet redis-server.service; then
-            echo "SUDO: Starting redis server"
-            sudo systemctl start redis-server.service
-          fi
-          systemctl status redis-server.service --lines 0 --no-pager
-
-          echo "DONE WITH REDIS"
+      - name: Configuring Redis
+        uses: shogo82148/actions-setup-redis@v1
+        with:
+          redis-version: latest
+#      - name: Activating Redis
+#        run: |
+#          echo "SUDO: Installing redis"
+#          sudo apt-get clean
+#          sudo apt-get update
+#          sudo apt-get install -y redis
+#
+#          if ! systemctl is-active --quiet redis-server.service; then
+#            echo "SUDO: Starting redis server"
+#            sudo systemctl start redis-server.service
+#          fi
+#          systemctl status redis-server.service --lines 0 --no-pager
+#
+#          echo "DONE WITH REDIS"
       - name: Configuring Mongo
         uses: supercharge/mongodb-github-action@1.11.0
         with:
@@ -186,10 +190,10 @@ jobs:
           conda info --envs
           eval "$(conda shell.bash hook)"
           conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda"
-      - name: Start Re Manager
-        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
-      - name: Confirm Completion
-        run: echo "DONE"
+#      - name: Start Re Manager
+#        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
+#      - name: Confirm Completion
+#        run: echo "DONE"
 
 #          echo "Performing beamline-specific tasks..."
 #          case "${BEAMLINE_ACRONYM,,}" in
