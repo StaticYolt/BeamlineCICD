@@ -120,7 +120,7 @@ jobs:
           set +u
           eval "$(conda shell.bash hook)"
           conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          sudo conda unpack && echo "Unpacked successfully!"
+          conda unpack && echo "Unpacked successfully!"
           set -u
       - name: Configuring Redis
         uses: shogo82148/actions-setup-redis@v1
@@ -159,4 +159,6 @@ jobs:
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
       - name: Start Re Manager
-        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
+        run: |
+          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+          start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
