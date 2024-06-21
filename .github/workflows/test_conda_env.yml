@@ -117,15 +117,15 @@ jobs:
           pwd
           sudo tar -xvf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
           conda env list
-#      - name: starting conda
-#        run: |
-#          set +u
-#          eval "$(conda shell.bash hook)"
-#          conda activate "${{ env.CONDA_ENV_NAME}}"
-#          sudo conda unpack && echo "Unpacked successfully!"
-#          set -u
-#          ls
-#          conda env list
+      - name: starting conda
+        run: |
+          set +u
+          eval "$(conda shell.bash hook)"
+          conda activate "${{ env.CONDA_ENV_NAME}}"
+          sudo conda unpack && echo "Unpacked successfully!"
+          set -u
+          ls
+          conda env list
 #      - name: Start MongoDB
 #        uses: supercharge/mongodb-github-action@1.11.0
 #        with:
