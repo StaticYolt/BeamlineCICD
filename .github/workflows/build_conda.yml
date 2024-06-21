@@ -41,7 +41,7 @@ jobs:
         env:
           CONDA_PREFIX: "/miniconda"
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-        run:
+        run: |
           conda env list
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
