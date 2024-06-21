@@ -5,22 +5,44 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+  push:
+    branches: [ "main" ]
+
 jobs:
   run-tests:
     strategy:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
+        zenodo: [{env: "2023-3.3-py310-tiled", id: "10148425", checksum: "0a47934380db013b36f3e089afdff6aa"}]
 
     name: Conda Stuff
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Give permissions
-        run: chmod +x queueserver_emu.sh
       - name: Build Conda Env
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        run: bash -uem ./queueserver_emu.sh --install-{conda,mongo,redis} --default-config
+          CONDA_PREFIX: "home/runner/miniconda"
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run: |
+          echo "Installing conda"
+          wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          bash ./miniconda.sh -b -p $CONDA_PREFIX
+          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+
+          echo "Downloading conda env..." &&
+          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenodo.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+
+          echo "Extracting conda env..."
+          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          conda env list
+      - name: unpack activate conda
+        env:
+          CONDA_PREFIX: "home/runner/miniconda"
+          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+        run:
+          set +u
+          conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          conda unpack && echo "Unpacked successfully!"
+          set -u
