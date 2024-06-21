@@ -45,6 +45,7 @@ jobs:
          conda unpack && echo "Unpacked successfully!"
          set -u
          conda env list
+
 #      - name: unpack activate conda
 #        env:
 #          CONDA_PREFIX: "home/runner/miniconda"
