@@ -43,6 +43,9 @@ jobs:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: |
           conda env list
+          set +u
+          eval "$(conda shell.bash hook)"
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda unpack && echo "Unpacked successfully!"
+          set -u
           conda env list
