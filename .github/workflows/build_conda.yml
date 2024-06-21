@@ -36,15 +36,18 @@ jobs:
           echo "Extracting conda env..."
           sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          
+          conda env list
+          
           conda env list
           set +u
-         eval "$(conda shell.bash hook)"
-         pwd
-         conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda/envs/${CONDA_ENV_NAME}"
-         pwd
-         conda unpack && echo "Unpacked successfully!"
-         set -u
-         conda env list
+          eval "$(conda shell.bash hook)"
+          conda env list
+          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda/envs/${CONDA_ENV_NAME}"
+          pwd
+          conda unpack && echo "Unpacked successfully!"
+          set -u
+          conda env list
 
 #      - name: unpack activate conda
 #        env:
