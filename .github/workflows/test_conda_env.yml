@@ -158,26 +158,5 @@ jobs:
           sudo pip install supervisor 
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
-
-#conda init bash
-#eval "$(conda shell.bash hook)"
-#      - name: Activating Conda
-#        env:
-#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-#        run: |
-#          conda activate "$CONDA_ENV_NAME"
-#          conda env list
-# /home/runner/work/BeamlineCICD/BeamlineCICD/miniconda
-#echo "Extracting conda env..."
-#sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-#sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-#set +u
-#
-#echo "initialized conda"
-#conda init bash
-#conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-#sudo conda unpack && echo "Unpacked successfully!"
-#set -u
-#ls
-#conda env list
-
+      - name: Start Re Manager
+        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON

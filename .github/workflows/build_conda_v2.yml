@@ -190,8 +190,8 @@ jobs:
           conda info --envs
           eval "$(conda shell.bash hook)"
           conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda"
-#      - name: Start Re Manager
-#        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
+      - name: Start Re Manager
+        run: start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
 #      - name: Confirm Completion
 #        run: echo "DONE"
 
