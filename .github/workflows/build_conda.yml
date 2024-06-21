@@ -27,15 +27,15 @@ jobs:
         run: |
           echo "Installing conda"
           wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
-          bash ./miniconda.sh -b -p $CONDA_PREFIX
-          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+          sudo bash ./miniconda.sh -b -p $CONDA_PREFIX
+          sudo source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
 
           echo "Downloading conda env..." &&
-          wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenodo.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+          sudo wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenodo.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
 
           echo "Extracting conda env..."
-          mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          sudo tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda env list
       - name: unpack activate conda
         env:
@@ -45,6 +45,6 @@ jobs:
           conda env list
           set +u
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          conda unpack && echo "Unpacked successfully!"
+          sudo conda unpack && echo "Unpacked successfully!"
           set -u
           conda env list
