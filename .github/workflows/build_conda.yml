@@ -45,7 +45,7 @@ jobs:
           conda env list
           conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda/envs/${CONDA_ENV_NAME}"
           pwd
-          conda unpack && echo "Unpacked successfully!"
+          sudo conda unpack && echo "Unpacked successfully!"
           set -u
           conda env list
 
