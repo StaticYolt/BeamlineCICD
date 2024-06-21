@@ -28,7 +28,7 @@ jobs:
           echo "Installing conda"
           wget --progress=dot:giga https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
           sudo bash ./miniconda.sh -b -p $CONDA_PREFIX
-          sudo source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
+          source "${CONDA_PREFIX}/etc/profile.d/conda.sh"
 
           echo "Downloading conda env..." &&
           sudo wget --progress=dot:giga  "https://zenodo.org/record/${{matrix.zenodo.id}}/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
