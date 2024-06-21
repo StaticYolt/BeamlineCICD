@@ -126,7 +126,7 @@ jobs:
           set +u
           eval "$(conda shell.bash hook)"
           ls "${{ env.CONDA_PREFIX }}/env"
-          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/${{ env.CONDA_PREFIX }}/env/${{ env.CONDA_ENV_NAME}}"
+          conda activate "${{ env.CONDA_ENV_NAME}}"
           sudo conda unpack && echo "Unpacked successfully!"
           set -u
           ls
