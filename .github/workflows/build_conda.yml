@@ -35,7 +35,7 @@ jobs:
 
           echo "Extracting conda env..."
           sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          sudo tar -xvf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
+          sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda env list
       - name: unpack activate conda
         env:
@@ -43,8 +43,6 @@ jobs:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run:
           conda env list
-          set +u
           conda activate "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
-          sudo conda unpack && echo "Unpacked successfully!"
-          set -u
+          conda unpack && echo "Unpacked successfully!"
           conda env list
