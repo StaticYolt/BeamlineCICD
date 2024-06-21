@@ -37,17 +37,18 @@ jobs:
           sudo mkdir -v -p "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           sudo tar -xf "${CONDA_ENV_NAME}.tar.gz" -C "${CONDA_PREFIX}/envs/${CONDA_ENV_NAME}"
           conda env list
-      - name: unpack activate conda
-        env:
-          CONDA_PREFIX: "home/runner/miniconda"
-          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-        run: |
-          conda env list
           set +u
-          eval "$(conda shell.bash hook)"
-          pwd
-          conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda/envs/${CONDA_ENV_NAME}"
-          pwd
-          conda unpack && echo "Unpacked successfully!"
-          set -u
-          conda env list
+         eval "$(conda shell.bash hook)"
+         pwd
+         conda activate "/home/runner/work/BeamlineCICD/BeamlineCICD/home/runner/miniconda/envs/${CONDA_ENV_NAME}"
+         pwd
+         conda unpack && echo "Unpacked successfully!"
+         set -u
+         conda env list
+#      - name: unpack activate conda
+#        env:
+#          CONDA_PREFIX: "home/runner/miniconda"
+#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+#        run: |
+#          conda env list
+
