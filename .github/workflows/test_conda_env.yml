@@ -3,33 +3,35 @@ name: Test Conda Env
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-#  push:
-#    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 
 
 jobs:
-  zenodo_artifact:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Downloading Conda
-        uses: conda-incubator/setup-miniconda@v3
-      - name: Downloading Conda env
-        env:
-          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
-        run: |
-          echo "Downloading conda env..." &&
-          wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: conda_artifact
-          path: "2023-3.3-py310-tiled.tar.gz"
+#  zenodo_artifact:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Downloading Conda
+#        uses: conda-incubator/setup-miniconda@v3
+#      - name: Downloading Conda env
+#        env:
+#          CONDA_ENV_NAME: "2023-3.3-py310-tiled"
+#        run: |
+#          echo "Downloading conda env..." &&
+#          wget --progress=dot:giga  "https://zenodo.org/record/10148425/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: conda_artifact
+#          path: "2023-3.3-py310-tiled.tar.gz"
   testing_conda_artifact:
-    needs: zenodo_artifact
+#    needs: zenodo_artifact
     env:
       CONDA_ENV_NAME: 2023-3.3-py310-tiled
       CONDA_PREFIX: home/runner/miniconda
+      PROFILE_NAME: test
+      CHECKOUT_FOLDER: Ipython_test
     strategy:
       fail-fast: false
       matrix:
@@ -95,7 +97,6 @@ jobs:
         env:
           PROFILE_REPO: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
           PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
-          TEST_PROFILE: "test"
         run: |
           echo "Preparing test profile"
           rm -rfv profile_collection
@@ -103,25 +104,39 @@ jobs:
             (
               cd profile_collection
               git checkout "$PROFILE_BRANCH"
-              rm -rfv ~/.ipython/profile_${TEST_PROFILE}/
-              mkdir -pv ~/.ipython/profile_${TEST_PROFILE}/
-              cp -rv startup ~/.ipython/profile_${TEST_PROFILE}/
+              rm -rfv ~/.ipython/profile_${{env.PROFILE_NAME}}/
+              mkdir -pv ~/.ipython/profile_${{env.PROFILE_NAME}}/
+              cp -rv startup ~/.ipython/profile_${{env.PROFILE_NAME}}/
             )
           echo "COMPLETED STARTING UP"
-      - name: Downloading Conda Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: conda_artifact
-      - name: Extracting, Activating and Unpacking Conda env
+      - name: Set up IPython
+        run: pip install ipython
+      - name: Creating ipython profile
+        run: ipython profile create ${{env.PROFILE_NAME}}
+      - name: Go to startup file and add files in checkout folder
+        run: cp ~/.ipython/profile_${{env.PROFILE_NAME}}/startup/** $(ipython locate profile ${{env.PROFILE_NAME}})/startup/
+      - name: confirm file moved
         run: |
-          mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          tar -xf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          
-          set +u
-          eval "$(conda shell.bash hook)"
-          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          conda unpack && echo "Unpacked successfully!"
-          set -u
+          cd ~/.ipython/profile_${{env.PROFILE_NAME}}/startup/
+          ls
+          echo "Done with Checkout folder"
+          cd "$(ipython locate profile ${{env.PROFILE_NAME}})/startup"
+          ls
+          echo "Done with startup folder"
+#      - name: Downloading Conda Artifact
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: conda_artifact
+#      - name: Extracting, Activating and Unpacking Conda env
+#        run: |
+#          mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+#          tar -xf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+#
+#          set +u
+#          eval "$(conda shell.bash hook)"
+#          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+#          conda unpack && echo "Unpacked successfully!"
+#          set -u
       - name: Configuring Redis
         uses: shogo82148/actions-setup-redis@v1
         with:
