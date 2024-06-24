@@ -11,6 +11,9 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
+      with:
+        sparse-checkout: 'Ipython_test'
+        sparse-checkout-cone-mode: false
     - name: Set up IPython
       run: pip install ipython
     - name: Check for ipython
