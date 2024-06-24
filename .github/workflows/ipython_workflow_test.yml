@@ -33,7 +33,8 @@ jobs:
         cd ${{env.CHECKOUT_FOLDER}}
         ls
         echo "Done with Checkout folder"
-        mv $(ipython locate profile ${{env.PROFILE_NAME}})/startup
+        cd "$(ipython locate profile ${{env.PROFILE_NAME}})"
+        cd startup
         ls
         echo "Done with startup folder"
     - name: test runners
