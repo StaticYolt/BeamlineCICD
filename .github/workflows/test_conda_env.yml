@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Downloading Conda
         uses: conda-incubator/setup-miniconda@v3
-      - name: Downloading Conda env
+      - name: Downloading Conda Environment From Zenodo
         env:
           CONDA_ENV_NAME: "2023-3.3-py310-tiled"
         run: |
@@ -38,13 +38,13 @@ jobs:
                 {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Cloning Remote Repos
+      - name: Cloning Remote Repositories
         run: |
           mkdir "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
           git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
-      - name: Configuring defaults
+      - name: Configuring defaults (pyOlog, databroker, and kafka)
         run: |
           echo "pyOlog config:"
           wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
@@ -91,7 +91,7 @@ jobs:
             sudo mkdir -v -p /etc/bluesky/
             sudo mv -v kafka.yml /etc/bluesky/kafka.yml
             cat /etc/bluesky/kafka.yml
-      - name: Setup Ipython test profile
+      - name: Setup Ipython Test Profile
         env:
           PROFILE_REPO: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
           PROFILE_BRANCH: "${{matrix.repos.profile_branch}}"
@@ -106,16 +106,15 @@ jobs:
               mkdir -pv ~/.ipython/profile_${{env.PROFILE_NAME}}/
               cp -rv startup ~/.ipython/profile_${{env.PROFILE_NAME}}/
             )
-          echo "COMPLETED STARTING UP"
-      - name: Set up IPython
+      - name: Set Up Ipython
         run: pip install ipython
-      - name: Creating ipython profile
+      - name: Creating Ipython Profile
         run: ipython profile create ${{env.PROFILE_NAME}}
       - name: Downloading Conda Artifact
         uses: actions/download-artifact@v4
         with:
           name: conda_artifact
-      - name: Extracting, Activating and Unpacking Conda env
+      - name: Extracting, Activating and Unpacking Conda Artifact
         run: |
           mkdir -v -p "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
           tar -xf "${{env.CONDA_ENV_NAME}}.tar.gz" -C "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
@@ -133,7 +132,7 @@ jobs:
         uses: supercharge/mongodb-github-action@1.11.0
         with:
           mongodb-version: '4.4'
-      - name: Performing Beamline actions
+      - name: Performing Beamline Actions
         env:
           BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
         run: |
@@ -146,7 +145,7 @@ jobs:
               exit 1
             )
           fi
-      - name: Set up Python
+      - name: Set Ip Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
@@ -162,7 +161,10 @@ jobs:
           chmod +x supervisor/start_supervisor.sh
           supervisor/start_supervisor.sh status
       - name: check for IPython
-        run: ipython --profile ${{env.PROFILE_NAME}}
+        run: |
+          eval "$(conda shell.bash hook)"
+          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+          ipython --profile ${{env.PROFILE_NAME}}
 #      - name: Start Re Manager
 #        run: |
 #          eval "$(conda shell.bash hook)"
