@@ -158,7 +158,8 @@ jobs:
           sudo pip install supervisor 
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
-
+      - name: check for IPython
+        run: ipython --version
 #      - name: Start Re Manager
 #        run: |
 #          eval "$(conda shell.bash hook)"

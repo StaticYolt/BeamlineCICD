@@ -2,13 +2,19 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    paths:
+      - Ipython_test/**
 
 jobs:
   test-ipython:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
     - name: Set up IPython
       run: pip install ipython
     - name: Check for ipython
-      run: ipython --version
+      run: |
+        ipython --version
+        ls
+        pwd
