@@ -152,7 +152,7 @@ jobs:
           python3 -m pip install -U caproto
           echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
           trap 'kill -SIGINT %1; echo exiting...' EXIT
-          sudo ln -svf caproto-repeater "home/runner/bin/caRepeater"
+          sudo ln -svf caproto-repeater "/bin/caRepeater"
       - name: Checking Blackhole IOC PV's
         run: |
           sudo pip install supervisor 
