@@ -29,11 +29,13 @@ jobs:
       run: |
         mv ${{env.CHECKOUT_FOLDER}}/** $(ipython locate profile ${{env.PROFILE_NAME}})/startup/
     - name: confirm file moved
+      env:
+        PF_NAME: ${{env.PROFILE_NAME}}
       run:
         cd ${{env.CHECKOUT_FOLDER}}
         ls
         echo "Done with Checkout folder"
-        cd "$(ipython locate profile ${{env.PROFILE_NAME}})"
+        cd "$(ipython locate profile $PF_NAME)"
         cd startup
         ls
         echo "Done with startup folder"
