@@ -8,7 +8,7 @@ jobs:
   test-ipython:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Set up IPython
+      run: pip install ipython
     - name: Check for ipython
       run: ipython --version
