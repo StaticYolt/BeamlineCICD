@@ -27,7 +27,7 @@ jobs:
       run: ipython profile create ${{env.PROFILE_NAME}}
     - name: Go to startup file and add files in checkout folder
       run: |
-        mv ${{env.CHECKOUT_FOLDER}}/** $(ipython locate profile ${{env.PROFILE_NAME}})/startup/
+        cp ${{env.CHECKOUT_FOLDER}}/** $(ipython locate profile ${{env.PROFILE_NAME}})/startup/
     - name: confirm file moved
       run: |
         cd ${{env.CHECKOUT_FOLDER}}
