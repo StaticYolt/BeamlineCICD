@@ -7,11 +7,14 @@ on:
 jobs:
   test-ipython:
     runs-on: ubuntu-latest
+    env:
+      PROFILE_NAME: test
+      CHECKOUT_FOLDER: Ipython_test
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
       with:
-        sparse-checkout: 'Ipython_test'
+        sparse-checkout: ${{CHECKOUT_FOLDER}}
         sparse-checkout-cone-mode: false
     - name: Set up IPython
       run: pip install ipython
@@ -21,4 +24,17 @@ jobs:
         ls
         pwd
     - name: Creating ipython profile
-      run: ipython profile create test
+      run: ipython profile create ${{PROFILE_NAME}}
+    - name: Go to startup file and add files in checkout folder
+      run: |
+        mv ${{CHECKOUT_FOLDER}}/** $(ipython locate profile ${{PROFILE_NAME}})/startup/
+    - name: confirm file moved
+      run:
+        cd ${{CHECKOUT_FOLDER}}
+        ls
+        echo "Done with Checkout folder"
+        cd $(ipython locate profile ${{PROFILE_NAME}})/startup
+        ls
+        echo "Done with startup folder"
+    - name: test runners
+      run: ls
