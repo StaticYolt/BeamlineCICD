@@ -34,15 +34,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "CSX"},
-                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "SRX"}]
+        repos: [{org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx"},
+                {org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx"}]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Cloning Remote Repositories
         run: |
-          mkdir "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
+          mkdir "${{matrix.repos.repo}}"
           git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
       - name: Configuring defaults (pyOlog, databroker, and kafka)
         run: |
