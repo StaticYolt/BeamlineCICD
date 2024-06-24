@@ -46,53 +46,53 @@ jobs:
         run: |
           mkdir "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
           git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
-      - name: Configuring defaults
-        run: |
-          echo "pyOlog config:"
-          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
-          cat $HOME/.pyOlog.conf
-
-          echo "Classic databroker v0/v1 config:"
-          databroker_conf_dir="$HOME/.config/databroker"
-          beamline_acronym="${BEAMLINE_ACRONYM,,}"
-          databroker_bl_conf="${beamline_acronym}.yml"
-          mkdir -v -p ${databroker_conf_dir}
-          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
-          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
-          cat ${databroker_conf_dir}/_legacy_config.yml
-          cat ${databroker_conf_dir}/${databroker_bl_conf}
-
-          echo "Tiled profile config:"
-          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
-          mkdir -v -p "${tiled_profiles_dir}"
-          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
-          ${beamline_acronym:-local}:
-            direct:
-              authentication:
-                allow_anonymous_access: true
-              trees:
-              - tree: databroker.mongo_normalized:Tree.from_uri
-                path: /
-                args:
-                  uri: mongodb://localhost:27017/metadatastore-local
-                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
-          EOF
-            cat ${tiled_profiles_dir}/profiles.yml
-
-            echo "Kafka config:"
-            sed 's/^  //' << EOF > kafka.yml
-            ---
-              abort_run_on_kafka_exception: false
-              bootstrap_servers:
-                - localhost:9092
-              runengine_producer_config:
-                security.protocol: PLAINTEXT
-          EOF
-
-            echo "SUDO: Placing kafka config in /etc/bluesky"
-            sudo mkdir -v -p /etc/bluesky/
-            sudo mv -v kafka.yml /etc/bluesky/kafka.yml
-            cat /etc/bluesky/kafka.yml
+#      - name: Configuring defaults
+#        run: |
+#          echo "pyOlog config:"
+#          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/pyOlog.conf -O $HOME/.pyOlog.conf
+#          cat $HOME/.pyOlog.conf
+#
+#          echo "Classic databroker v0/v1 config:"
+#          databroker_conf_dir="$HOME/.config/databroker"
+#          beamline_acronym="${BEAMLINE_ACRONYM,,}"
+#          databroker_bl_conf="${beamline_acronym}.yml"
+#          mkdir -v -p ${databroker_conf_dir}
+#          wget https://raw.githubusercontent.com/NSLS-II/profile-collection-ci/master/configs/databroker.yml -O ${databroker_conf_dir}/_legacy_config.yml
+#          cp -v ${databroker_conf_dir}/_legacy_config.yml ${databroker_conf_dir}/${databroker_bl_conf}
+#          cat ${databroker_conf_dir}/_legacy_config.yml
+#          cat ${databroker_conf_dir}/${databroker_bl_conf}
+#
+#          echo "Tiled profile config:"
+#          tiled_profiles_dir="$HOME/.config/tiled/profiles/"
+#          mkdir -v -p "${tiled_profiles_dir}"
+#          sed 's/^  //' << EOF > "${tiled_profiles_dir}/profiles.yml"
+#          ${beamline_acronym:-local}:
+#            direct:
+#              authentication:
+#                allow_anonymous_access: true
+#              trees:
+#              - tree: databroker.mongo_normalized:Tree.from_uri
+#                path: /
+#                args:
+#                  uri: mongodb://localhost:27017/metadatastore-local
+#                  asset_registry_uri: mongodb://localhost:27017/asset-registry-local
+#          EOF
+#            cat ${tiled_profiles_dir}/profiles.yml
+#
+#            echo "Kafka config:"
+#            sed 's/^  //' << EOF > kafka.yml
+#            ---
+#              abort_run_on_kafka_exception: false
+#              bootstrap_servers:
+#                - localhost:9092
+#              runengine_producer_config:
+#                security.protocol: PLAINTEXT
+#          EOF
+#
+#            echo "SUDO: Placing kafka config in /etc/bluesky"
+#            sudo mkdir -v -p /etc/bluesky/
+#            sudo mv -v kafka.yml /etc/bluesky/kafka.yml
+#            cat /etc/bluesky/kafka.yml
       - name: Setup Ipython test profile
         env:
           PROFILE_REPO: "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}.git"
@@ -113,16 +113,16 @@ jobs:
         run: pip install ipython
       - name: Creating ipython profile
         run: ipython profile create ${{env.PROFILE_NAME}}
-      - name: Go to startup file and add files in checkout folder
-        run: cp ~/.ipython/profile_${{env.PROFILE_NAME}}/startup/** $(ipython locate profile ${{env.PROFILE_NAME}})/startup/
-      - name: confirm file moved
-        run: |
-          cd ~/.ipython/profile_${{env.PROFILE_NAME}}/startup/
-          ls
-          echo "Done with Checkout folder"
-          cd "$(ipython locate profile ${{env.PROFILE_NAME}})/startup"
-          ls
-          echo "Done with startup folder"
+#      - name: Go to startup file and add files in checkout folder
+#        run: cp ~/.ipython/profile_${{env.PROFILE_NAME}}/startup/** $(ipython locate profile ${{env.PROFILE_NAME}})/startup/
+#      - name: confirm file moved
+#        run: |
+#          cd ~/.ipython/profile_${{env.PROFILE_NAME}}/startup/
+#          ls
+#          echo "Done with Checkout folder"
+#          cd "$(ipython locate profile ${{env.PROFILE_NAME}})/startup"
+#          ls
+#          echo "Done with startup folder"
 #      - name: Downloading Conda Artifact
 #        uses: actions/download-artifact@v4
 #        with:
@@ -137,44 +137,44 @@ jobs:
 #          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
 #          conda unpack && echo "Unpacked successfully!"
 #          set -u
-      - name: Configuring Redis
-        uses: shogo82148/actions-setup-redis@v1
-        with:
-          redis-version: latest
-      - name: Configuring Mongo
-        uses: supercharge/mongodb-github-action@1.11.0
-        with:
-          mongodb-version: '4.4'
-      - name: Performing Beamline actions
-        env:
-          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
-        run: |
-          echo "Performing beamline-specific tasks..."
-          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
-          if [[ ! -d "$cfg_dir" ]]; then
-            sudo mkdir -v -p "$cfg_dir" ||
-            (
-              echo "Error: Couldn't create dir: $cfg_dir"
-              exit 1
-            )
-          fi
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
-      - name: Setting up Blackhole IOC
-        run: |
-          python3 -m pip install -U caproto
-          echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
-          trap 'kill -SIGINT %1; echo exiting...' EXIT
-          sudo ln -svf caproto-repeater "/bin/caRepeater"
-      - name: Checking Blackhole IOC PV's
-        run: |
-          sudo pip install supervisor 
-          chmod +x supervisor/start_supervisor.sh 
-          supervisor/start_supervisor.sh status
+#      - name: Configuring Redis
+#        uses: shogo82148/actions-setup-redis@v1
+#        with:
+#          redis-version: latest
+#      - name: Configuring Mongo
+#        uses: supercharge/mongodb-github-action@1.11.0
+#        with:
+#          mongodb-version: '4.4'
+#      - name: Performing Beamline actions
+#        env:
+#          BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
+#        run: |
+#          echo "Performing beamline-specific tasks..."
+#          cfg_dir="/nsls2/data/$BEAMLINE_ACRONYM/shared/config"
+#          if [[ ! -d "$cfg_dir" ]]; then
+#            sudo mkdir -v -p "$cfg_dir" ||
+#            (
+#              echo "Error: Couldn't create dir: $cfg_dir"
+#              exit 1
+#            )
+#          fi
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.11
+#      - name: Setting up Blackhole IOC
+#        run: |
+#          python3 -m pip install -U caproto
+#          echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
+#          trap 'kill -SIGINT %1; echo exiting...' EXIT
+#          sudo ln -svf caproto-repeater "/bin/caRepeater"
+#      - name: Checking Blackhole IOC PV's
+#        run: |
+#          sudo pip install supervisor
+#          chmod +x supervisor/start_supervisor.sh
+#          supervisor/start_supervisor.sh status
       - name: check for IPython
-        run: ipython --version
+        run: ipython --profile ${{env.PROFILE_NAME}}
 #      - name: Start Re Manager
 #        run: |
 #          eval "$(conda shell.bash hook)"
