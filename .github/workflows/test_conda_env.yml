@@ -43,7 +43,7 @@ jobs:
       - name: Cloning Remote Repositories
         run: |
           mkdir "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
-          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.beamline_acronym}}_${{matrix.repos.repo}}"
+          git clone -b ${{matrix.repos.branch}} "https://github.com/${{matrix.repos.org}}/${{matrix.repos.repo}}" "${{matrix.repos.repo}}"
       - name: Configuring defaults (pyOlog, databroker, and kafka)
         run: |
           echo "pyOlog config:"
