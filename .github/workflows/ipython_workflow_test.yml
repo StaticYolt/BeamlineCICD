@@ -31,7 +31,7 @@ jobs:
     - name: confirm file moved
       env:
         PF_NAME: ${{env.PROFILE_NAME}}
-      run:
+      run: |
         cd ${{env.CHECKOUT_FOLDER}}
         ls
         echo "Done with Checkout folder"
