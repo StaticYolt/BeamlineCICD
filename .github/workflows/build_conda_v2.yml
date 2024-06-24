@@ -177,6 +177,7 @@ jobs:
           echo | python3 -m caproto.ioc_examples.pathological.spoof_beamline &
           trap 'kill -SIGINT %1; echo exiting...' EXIT
           sudo ln -svf caproto-repeater "${CONDA_PREFIX}/bin/caRepeater"
+          echo "Conda Prefix: ${CONDA_PREFIX}"
       - name: Checking Blackhole IOC PV's
         run: |
           sudo pip install supervisor 
