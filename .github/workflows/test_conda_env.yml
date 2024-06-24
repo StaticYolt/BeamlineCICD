@@ -3,8 +3,8 @@ name: Test Conda Env
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
+#  push:
+#    branches: [ "main" ]
 
 
 
@@ -158,8 +158,9 @@ jobs:
           sudo pip install supervisor 
           chmod +x supervisor/start_supervisor.sh 
           supervisor/start_supervisor.sh status
-      - name: Start Re Manager
-        run: |
-          eval "$(conda shell.bash hook)"
-          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
-          start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
+
+#      - name: Start Re Manager
+#        run: |
+#          eval "$(conda shell.bash hook)"
+#          conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
+#          start-re-manager --startup-dir=$HOME/.ipython/profile_test/startup --keep-re --use-ipython-kernel=ON --ignore-invalid-plans=ON
