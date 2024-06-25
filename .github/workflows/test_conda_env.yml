@@ -14,7 +14,7 @@ jobs:
         uses: conda-incubator/setup-miniconda@v3
       - name: Downloading Conda Environment From Zenodo
         env:
-          CONDA_ENV_NAME: "2024-2.1-py310-tiled"
+          CONDA_ENV_NAME: "2024-2.1-py310"
         run: |
           echo "Downloading conda env..." &&
           wget --progress=dot:giga  "https://zenodo.org/record/12207275/files/${CONDA_ENV_NAME}.tar.gz?download=1" -O "${CONDA_ENV_NAME}.tar.gz"
@@ -22,11 +22,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: conda_artifact
-          path: "2024-2.1-py310-tiled.tar.gz"
+          path: "2024-2.1-py310.tar.gz"
   testing_conda_artifact:
     needs: zenodo_artifact
     env:
-      CONDA_ENV_NAME: 2024-2.1-py310-tiled
+      CONDA_ENV_NAME: 2024-2.1-py310
       CONDA_PREFIX: home/runner/miniconda
       PROFILE_NAME: test
       CHECKOUT_FOLDER: Ipython_test
