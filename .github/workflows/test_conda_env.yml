@@ -167,6 +167,7 @@ jobs:
           for tiled_profile_name in nsls2 ${{matrix.repos.beamline_acronym}}; do
             tiled profile create --name $tiled_profile_name https://127.0.0.1:8000
           done
+          tiled serve catalog --temp --api-key secret
           ipython --profile ${{env.PROFILE_NAME}}
 #      - name: Start Re Manager
 #        run: |
