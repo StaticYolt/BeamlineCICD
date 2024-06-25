@@ -37,5 +37,7 @@ jobs:
         ls
         echo "Done with startup folder"
     - name: run ipython
-      run: ipython
+      run: |
+        +u
+        ipython
 # --profile ${{env.PROFILE_NAME}}
