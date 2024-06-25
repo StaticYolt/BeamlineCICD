@@ -40,4 +40,5 @@ jobs:
       run: |
         set +u
         ipython
+        print("Hello World")
 # --profile ${{env.PROFILE_NAME}}

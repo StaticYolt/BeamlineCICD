@@ -132,6 +132,10 @@ jobs:
         uses: supercharge/mongodb-github-action@1.11.0
         with:
           mongodb-version: '4.4'
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
       - name: Performing Beamline Actions
         env:
           BEAMLINE_ACRONYM: ${{matrix.repos.beamline_acronym}}
@@ -145,10 +149,6 @@ jobs:
               exit 1
             )
           fi
-      - name: Set Up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.11
       - name: Setting up Blackhole IOC
         run: |
           python3 -m pip install -U caproto
