@@ -1,7 +1,8 @@
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
+  push:
+    branches: [ "main" ]
 
 jobs:
   test-ipython:
@@ -36,4 +37,5 @@ jobs:
         ls
         echo "Done with startup folder"
     - name: run ipython
-      run: ipython --profile ${{env.PROFILE_NAME}}
+      run: ipython
+# --profile ${{env.PROFILE_NAME}}
