@@ -165,7 +165,7 @@ jobs:
           eval "$(conda shell.bash hook)"
           conda activate "${{ env.CONDA_PREFIX }}/envs/${{ env.CONDA_ENV_NAME }}"
           for tiled_profile_name in nsls2 ${{matrix.repos.beamline_acronym}}; do
-            tiled profile create --name $tiled_profile_name
+            tiled profile create --name $tiled_profile_name https://127.0.0.1:8000
           done
           ipython --profile ${{env.PROFILE_NAME}}
 #      - name: Start Re Manager
