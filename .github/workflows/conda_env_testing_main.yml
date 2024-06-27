@@ -1,4 +1,4 @@
-name: Master Workflow
+name: Main Workflow
 
 on:
   push:
@@ -11,6 +11,6 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.10', '3.11', '3.12']
-    uses: ./.github/workflows/common_workflow.yml
+    uses: ./.github/workflows/conda_env_testing_common.yml # calls the one above ^
     with:
       version: ${{ matrix.python-version }}
