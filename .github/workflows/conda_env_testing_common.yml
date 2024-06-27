@@ -1,0 +1,38 @@
+name: Common Workflow
+
+on:
+  workflow_call:
+    inputs:
+      version: # the variable you can use in place of a matrix
+        required: true
+        type: string
+
+jobs:
+  job0:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create txt
+        run: touch ${{ inputs.version }}.txt
+      - name: upload txt as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.version }}
+          path: ${{ inputs.version }}.txt
+
+  job1:
+    strategy:
+      fail-fast: false
+      matrix:
+        repos: [ { org: "NSLS-II-CSX", repo: "profile_collection", branch: "master", profile_branch: "qserver", beamline_acronym: "csx" },
+                 { org: "NSLS-II-SRX", repo: "profile_collection", branch: "master", profile_branch: "master", beamline_acronym: "srx" } ]
+    runs-on: ubuntu-latest
+    needs: job0
+    steps:
+      - run: echo 'job1 version ${{ inputs.version }} and ${{matrix.repos.org}}'
+      - name: Downloading Conda Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.version }}
+      - name: confirm download
+        run: ls
+# something
